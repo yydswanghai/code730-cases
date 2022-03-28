@@ -12,6 +12,7 @@
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^2.2.0",
+    "gsap": "^3.9.1",
     "vite": "^2.8.0"
   }
 }
