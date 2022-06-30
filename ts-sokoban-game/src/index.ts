@@ -1,1 +1,3 @@
-export const a = []
+import "./game"
+
+import "./index.css"

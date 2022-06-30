@@ -1,0 +1,29 @@
+#game{
+    margin: 0 auto;
+    position: relative;
+}
+#game .item{
+    position: absolute;
+    width: 45px;
+    height: 45px;
+    background-size: 100% 100%;
+    /* 用JS控制坐标 */
+}
+#game .wall{
+    background-image: url("./assets/wall.jpg");
+}
+#game .box{
+    background-image: url("./assets/box.png");
+}
+#game .player{
+    background-image: url("./assets/player.png");
+}
+/* 正确状态的箱子 */
+#game .correct-box{
+    background-image: url("./assets/over_box.png");
+}
+#game .correct{
+    border: 2px solid rgb(24, 151, 24);
+    /* 设置下面的属性之后，宽高影响的范围是边框盒 */
+    box-sizing: border-box;
+}

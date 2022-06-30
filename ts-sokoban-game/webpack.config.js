@@ -6,7 +6,7 @@ module.exports = {
     entry: "./src/index.ts",
     output: {
         path: path.resolve(__dirname, "dist"),
-        filename: "script/bundle.js"
+        filename: "script/bundle.js",
     },
     plugins: [
         new HtmlWebpackPlugin({
@@ -19,6 +19,23 @@ module.exports = {
             {
                 test: /.ts$/,
                 loader: "ts-loader"
+            },
+            {
+                test: /\.css$/,
+                use: ['style-loader', 'css-loader']
+            },
+            {
+                test: /\.(gif|png|jpe?g|svg)$/i,
+                use: [
+                    {
+                        loader: 'url-loader',
+                        options: {
+                            limit: false,
+                            name: '[name].[ext]',
+                            outputPath: 'images/',
+                        }
+                    },
+                ]
             }
         ]
     },
