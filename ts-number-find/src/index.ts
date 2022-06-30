@@ -1,4 +1,1 @@
-const a: string = "dad"
-console.log(a)
-
-export { a }
+import "./page/event"
