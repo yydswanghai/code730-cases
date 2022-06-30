@@ -1,0 +1,20 @@
+{
+    "compilerOptions": {
+        "target": "es5",// 配置编译目标代码的版本标准
+        "lib": [// 默认情况下ts使用的环境
+            "dom",
+            "dom.iterable",
+            "esnext"
+        ],
+        "module": "esnext",/* 模块化标准 */
+        "strict": true,/* 严格的类型检查 */
+        "moduleResolution": "node",/* 设置解析模块的模式 */
+        "esModuleInterop": true,/* 启用es模块化交互非es模块导出 */
+        "isolatedModules": true,/* 是否把每一个文件当成一个模块 必须出现模块代码 */
+        "removeComments": true,/* 编译删除注释 */
+        "outDir": "./lib"/* 编译输出目录 */
+    },
+    "include": [
+        "src"
+    ]
+}
