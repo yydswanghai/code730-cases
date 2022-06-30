@@ -3,7 +3,7 @@
 node_modules
 dist
 # production
-/build
+/lib
 
 # misc
 .DS_Store

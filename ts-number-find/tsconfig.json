@@ -7,12 +7,12 @@
             "esnext"
         ],
         "module": "esnext",/* 模块化标准 */
-        "sourceMap": true,/* 源码地图 */
         "strict": true,/* 严格的类型检查 */
         "moduleResolution": "node",/* 设置解析模块的模式 */
         "esModuleInterop": true,/* 启用es模块化交互非es模块导出 */
         "isolatedModules": true,/* 是否把每一个文件当成一个模块 必须出现模块代码 */
-        "removeComments": true/* 编译删除注释 */
+        "removeComments": true,/* 编译删除注释 */
+        "outDir": "./lib"/* 编译输出目录 */
     },
     "include": [
         "src"
