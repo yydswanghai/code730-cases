@@ -1,4 +1,6 @@
-let a:string = "dad"
-console.log(a)
+import $ from "jquery"
+import { Game } from "./core/Game"
+import { GamePageViewer } from "./core/viewer/GamePageViewer"
 
-export const b = []
+const g = new Game(new GamePageViewer())
+g.start()
