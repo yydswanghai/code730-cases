@@ -15,6 +15,6 @@
         "removeComments": true/* 编译删除注释 */
     },
     "include": [
-        "src"
+        "src/*"
     ]
 }

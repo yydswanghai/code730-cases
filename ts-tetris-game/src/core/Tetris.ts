@@ -104,14 +104,14 @@ export const shapes = [
 ]
 
 export const colors: string[] = [
-    'palevioletred', 'white', 'darkseagreen', 'skyblue', 'orange'
+    '#6999AD', '#ADC4C7', '#8ED070', '#9A86A7', '#EBEB67', '#D76A93', '#EC9F59'
 ]
 
 /**
  * 随机产生一个俄罗斯方块（颜色，形状随机）
  * @param centerPoint
  */
-export function createTeris(centerPoint: IPoint): SquareGroup {
+export function createTetris(centerPoint: IPoint): SquareGroup {
     let index = getRandom(0, shapes.length);
     const shape = shapes[index];
     index = getRandom(0, colors.length);

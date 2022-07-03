@@ -1,3 +1,4 @@
+import { Game } from "./Game"
 import { SquareGroup } from "./SquareGroup"
 
 export interface IPoint {
@@ -41,11 +42,23 @@ export enum IGameStatus {
 
 export interface IGameViewer {
     /**
-     * @param teris 下一个方块对象
+     * @param tetris 下一个方块对象
      */
-    showNext(teris: SquareGroup): void;
+    showNext(tetris: SquareGroup): void;
     /**
-     * @param teris 切换的方块对象
+     * @param tetris 切换的方块对象
      */
-    swtich(teris: SquareGroup): void;
+    swtich(tetris: SquareGroup): void;
+    /**
+     * 完成界面的初始化
+     */
+    init(game: Game): void
+
+    showScore(score: number): void
+
+    onGamePause(): void
+
+    onGameStart(): void
+
+    onGameOver(): void
 }
