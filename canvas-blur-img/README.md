@@ -1,6 +1,6 @@
 ## 黑白图片、模糊图片 (canvas滤镜)
 
-当前版本：webpack@4
+当前版本：webpack@4.46.0
 
 ts-loading@8
 
