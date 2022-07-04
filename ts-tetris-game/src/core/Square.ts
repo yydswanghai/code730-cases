@@ -4,11 +4,12 @@ import { IPoint, IViewer } from "./types"
  * 小方块类
  */
 export class Square {
+    // 逻辑位置
     private _point: IPoint = {
         x: 0, y: 0
     }
+    // 颜色
     private _color: string = ""
-
     // 显示者
     private _viewer?: IViewer
 
