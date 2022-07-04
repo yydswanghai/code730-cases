@@ -1,0 +1,19 @@
+{
+    "compilerOptions": {
+        "target": "es2016",
+        "module": "commonjs",
+        "lib": [
+            "es2016"
+        ],
+        "outDir": "./dist",
+        "removeComments": true,
+        "noImplicitUseStrict": true,
+        "esModuleInterop": true,
+        "experimentalDecorators": true,
+        // "strictNullChecks": true,
+        // "strictPropertyInitialization": true
+    },
+    "include": [ // 指定ts编译的文件目录，默认是全部都编译
+        "./src/*" // 仅编译 src下的ts文件
+    ]
+}

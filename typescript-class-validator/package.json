@@ -1,0 +1,20 @@
+{
+    "name": "typescript-demo",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "dev": "nodemon --watch src -e ts --exec ts-node src/index.ts",
+        "dev:transformer": "nodemon --watch src -e ts --exec ts-node src/transformer.ts",
+        "build": "rd /s /q dist & tsc"
+    },
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+        "@types/node": "^17.0.42",
+        "axios": "^0.27.2",
+        "class-transformer": "^0.5.1",
+        "class-validator": "^0.13.2",
+        "reflect-metadata": "^0.1.13"
+    }
+}
