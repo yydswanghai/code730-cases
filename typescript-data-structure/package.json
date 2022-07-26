@@ -1,0 +1,13 @@
+{
+  "name": "ts-data-structure",
+  "version": "1.0.0",
+  "description": "ts-number-find-demo",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon --watch src -e ts --exec ts-node src/index.ts",
+    "build": "rd /s /q dist & tsc"
+  },
+  "keywords": [],
+  "author": "me",
+  "license": "ISC"
+}
