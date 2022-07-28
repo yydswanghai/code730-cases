@@ -42,7 +42,7 @@ function partition(arr, left, right) {
     }
     return left;
 }
-function quickSort(arr) {
+export function quickSort(arr) {
     return quick(arr, 0, arr.length - 1);
 }
 

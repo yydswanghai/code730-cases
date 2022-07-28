@@ -40,4 +40,4 @@ function nizhi<T>(root: LinkNode<T>) {
     }
 }
 
-bianLink(nizhi(node1))
+bianLink<number>(nizhi(node1))

@@ -1,4 +1,4 @@
-class Queue<T> {
+export class Queue<T> {
     private _count: number = this.items.length
     private _lowestCount: number = 0// 用来追踪第一个元素
     constructor(public items: Array<T> = []) {}

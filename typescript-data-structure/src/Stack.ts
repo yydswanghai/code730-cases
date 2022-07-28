@@ -1,4 +1,4 @@
-class Stack<T> {
+export class Stack<T> {
     private _count: number = this.items.length
     constructor(public items: Array<T> = []) {}
 
