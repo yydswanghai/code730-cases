@@ -1,0 +1,28 @@
+{
+    "name": "webapp-hammerjs",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "dev": "webpack-dev-server --host 192.168.3.244",
+        "build": "webpack --mode=production",
+        "build:ts": "rd /s /q lib & tsc"
+    },
+    "keywords": [],
+    "author": "me",
+    "license": "ISC",
+    "devDependencies": {
+        "@types/hammerjs": "^2.0.41",
+        "clean-webpack-plugin": "4.0.0",
+        "copy-webpack-plugin": "6.4.1",
+        "html-webpack-plugin": "4.5.2",
+        "ts-loader": "8.1.0",
+        "typescript": "3.9.10",
+        "webpack": "4.46.0",
+        "webpack-cli": "3.3.10",
+        "webpack-dev-server": "3.3.1"
+    },
+    "dependencies": {
+        "hammerjs": "^2.0.8"
+    }
+}

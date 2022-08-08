@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>document</title>
+</head>
+<body>
+    <style>
+        html, body{
+            margin: 0;
+        }
+        #image {
+            width: 100px;
+        }
+        #view{
+            position: absolute;
+            left: 50%;
+            top: 0;
+            transform: translateX(-50%);
+        }
+    </style>
+    <img src="imgs/index.jpg" id="image" />
+    <div id="view">
+        <div class="translate"></div>
+        <div class="scale"></div>
+        <div class="angle"></div>
+    </div>
+</body>
+</html>
