@@ -1,0 +1,27 @@
+{
+  "name": "ts-tetris-game",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "webpack-dev-server",
+    "build": "webpack --mode=production"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/jquery": "3.5.14",
+    "clean-webpack-plugin": "4.0.0",
+    "copy-webpack-plugin": "6.4.1",
+    "html-webpack-plugin": "4.5.2",
+    "ts-loader": "5.4.5",
+    "typescript": "3.9.10",
+    "webpack": "4.46.0",
+    "webpack-cli": "3.3.1",
+    "webpack-dev-server": "3.3.1"
+  },
+  "dependencies": {
+    "jquery": "^3.4.0"
+  }
+}
