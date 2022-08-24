@@ -1,3 +1,4 @@
+import { Game } from './Game'
 /**
  * 0: 空白
  * 1: 玩家
@@ -63,7 +64,19 @@ export interface ICorrect {
 export interface ICorrectInfo extends ICorrect {
     value: number
 }
+/**
+ * ui显示者
+ */
 export interface IViewer {
     showUI(): void
 }
 export type IDirection = 'left' | 'right' | 'up' | 'down'
+/**
+ * game显示者
+ */
+export interface IGameViewer {
+    /**
+     * 完成界面的初始化
+     */
+    init(game: Game): void
+}
