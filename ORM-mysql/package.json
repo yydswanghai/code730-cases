@@ -1,0 +1,25 @@
+{
+  "name": "node-demo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/index.ts",
+  "scripts": {
+    "start": "ts-node src/index.ts",
+    "dev": "nodemon --watch src -e ts --exec ts-node src/index.ts",
+    "build": "rd /s /q dist & tsc"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/node": "^18.7.15",
+    "axios": "^0.27.2",
+    "cheerio": "^1.0.0-rc.12",
+    "log4js": "^6.6.1",
+    "md5": "^2.3.0",
+    "mockjs": "^1.1.0",
+    "moment": "^2.29.4",
+    "mysql2": "^2.3.3",
+    "sequelize": "^6.21.4",
+    "validate.js": "^0.13.1"
+  }
+}
