@@ -9,7 +9,7 @@ configure({
         sql: {// sql日志
             // 定义一个sql日志出口
             type: 'dateFile',// 类型：带日期的文件类型
-            filename: resolve(__dirname, '../','logs', 'sql', 'logging.log'),
+            filename: resolve(__dirname, '../../','logs', 'sql', 'logging.log'),
             maxlogSize: 1024,// 日志记录多大(1K)后开始滚动备份
             keepFileExt: true,// 保留文件后缀
             layout: {// 自定义日志前面的

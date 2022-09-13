@@ -15,11 +15,7 @@
         "strictPropertyInitialization": true
     },
     "include": [ // 指定ts编译的文件目录，默认是全部都编译
-        "./src", // 仅编译 src下的ts文件
-        "./models/",
-        "./services/",
-        "./mock/",
-        "./spider/",
-        "./utils/"
+        "src/**/*.ts",
+        "src/*.ts"
     ]
 }
