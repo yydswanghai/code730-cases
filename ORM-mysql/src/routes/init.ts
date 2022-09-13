@@ -1,14 +1,23 @@
 import express from 'express'
-import staticMiddleware from './staticMiddleware'
+import { resolve } from 'path'
+import studentRouter from './api/student'
+import adminRouter from './api/admin'
+import errorMiddleware from './errorMiddleware'
 
-const app = express();// 创建一个express应用
+// 创建一个express应用
+const app = express();
+// 映射public目录中的静态资源
+app.use(express.static(resolve(__dirname, '../public')));
+// 解析 application/x-www-form-urlencoded 格式的请求体
+app.use(express.urlencoded({ extended: true }));
+// 解析 application/json 格式的请求体
+app.use(express.json());
+// 处理 api 的请求
+app.use('/api/student', studentRouter);
+app.use('/api/admin', adminRouter);
 
-app.use(staticMiddleware)
-
-app.get('/news/abc', (req, res, next) => {
-    console.log('handle1')
-    next()
-})
+// 处理错误的中间件
+app.use(errorMiddleware);
 
 const port = 9525;
 app.listen(port, () => {

@@ -11,7 +11,7 @@ export default sequelize.define('Student', {
         type: DataTypes.DATE,
         allowNull: false,
         get() {
-            return this.getDataValue('birthday').getTime()
+            return this.getDataValue('birthday')?.getTime()
         },
     },
     age: {

@@ -1,5 +1,6 @@
 /**
  * model层初始化
+ * sync同步模型到数据库只需要一次初始化就可以了
  */
-import './relation'
 // import './sync'
+import './relation'

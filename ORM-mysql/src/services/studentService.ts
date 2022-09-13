@@ -4,7 +4,7 @@
 import Student from '../models/Student'
 import Class from '../models/Class'
 import { Op } from 'sequelize'
-import { validate, validators, async } from 'validate.js'
+import { validators, async } from 'validate.js'
 import { utc } from 'moment'
 import { pick } from '../utils/propertyHelper'
 
