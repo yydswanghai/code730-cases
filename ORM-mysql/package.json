@@ -5,25 +5,28 @@
   "main": "index",
   "scripts": {
     "start": "ts-node src/index",
-    "dev": "nodemon --watch src -e ts --exec ts-node src/index",
-    "build": "rd /s /q dist & tsc"
+    "dev": "nodemon --watch src --ext ts -x npm run start",
+    "debug:browser": "nodemon -w src -e ts --exec node --inspect -r ts-node/register src/index.ts"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "axios": "^0.27.2",
     "cheerio": "^1.0.0-rc.12",
+    "cookie-parser": "^1.4.6",
     "express": "^4.18.1",
     "log4js": "^6.6.1",
     "md5": "^2.3.0",
     "mockjs": "^1.1.0",
     "moment": "^2.29.4",
     "mysql2": "^2.3.3",
+    "path-to-regexp": "^6.2.1",
     "sequelize": "^6.21.4",
     "validate.js": "^0.13.1"
   },
   "devDependencies": {
     "@types/node": "^18.7.17",
-    "nodemon": "^2.0.19"
+    "nodemon": "^2.0.19",
+    "ts-node": "^10.9.1"
   }
 }
