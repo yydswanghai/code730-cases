@@ -13,6 +13,19 @@ router.get('/',
         return await getStudents({ page, limit, sex, name });
     })
 )
+// 使用jsonp跨域: 只能get请求，且影响服务器响应格式
+router.get('/jsonp',
+    async (req, res) => {
+        const page = +req.query.page || 1;
+        const limit = +req.query.limit || 10;
+        const sex = +req.query.sex || -1;
+        const name = req.query.name || '';
+        const result = await getStudents({ page, limit, sex, name });
+        const json = JSON.stringify(result);
+        const script = `callback(${json})`;
+        res.header('content-type', 'application/javascript').send(script);
+    }
+)
 // 通过id查询学生
 router.get('/:id',
     asyncHandler(async (req, res) => {

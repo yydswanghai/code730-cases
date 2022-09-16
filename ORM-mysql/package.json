@@ -6,7 +6,7 @@
   "scripts": {
     "start": "ts-node src/index",
     "dev": "nodemon --watch src --ext ts -x npm run start",
-    "debug:browser": "nodemon -w src -e ts --exec node --inspect -r ts-node/register src/index.ts"
+    "debug": "nodemon -w src -e ts --exec node --inspect -r ts-node/register src/index.ts"
   },
   "author": "",
   "license": "ISC",
@@ -14,7 +14,10 @@
     "axios": "^0.27.2",
     "cheerio": "^1.0.0-rc.12",
     "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
     "express": "^4.18.1",
+    "express-session": "^1.17.3",
+    "jsonwebtoken": "^8.5.1",
     "log4js": "^6.6.1",
     "md5": "^2.3.0",
     "mockjs": "^1.1.0",

@@ -1,6 +1,8 @@
 import express from 'express'
 import { resolve } from 'path'
 import cookieParser from 'cookie-parser'
+import cors from 'cors'
+import session from 'express-session'
 import studentRouter from './api/student'
 import adminRouter from './api/admin'
 import errorMiddleware from './errorMiddleware'
@@ -8,10 +10,28 @@ import tokenMiddleware from './tokenMiddleware'
 
 // 创建一个express应用
 const app = express();
-app.use(cookieParser());
-app.use(tokenMiddleware)
+
+app.use(session({
+    secret: 'key cat',
+    name: 'sessionid'
+}));
+
+const whiteList = ['null', 'http://localhost:9525']
+app.use(cors({
+    origin(origin, callback){
+        if(whiteList.includes(origin) || !origin){
+            callback(null, origin);
+        }else{
+            callback(new Error('不在白名单内 not allowed'))
+        }
+    },
+    credentials: true
+}));
+
 // 映射public目录中的静态资源
 app.use(express.static(resolve(__dirname, '../public')));
+app.use(cookieParser());
+app.use(tokenMiddleware);
 // 解析 application/x-www-form-urlencoded 格式的请求体
 app.use(express.urlencoded({ extended: true }));
 // 解析 application/json 格式的请求体

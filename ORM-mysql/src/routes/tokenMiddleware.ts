@@ -21,22 +21,33 @@ export default function (req, res, next) {
         next();
         return;
     }
-
-    // 剩下就是需要鉴权的api的逻辑
-    let token = req.cookies.token;
-    if(!token){
-        // 从 header 的 authorization 中获取
-        token = req.headers.authorization;
-    }
-    if(!token){
-        // 没有认证
-        handleNonToken(req, res, next);
+    /**
+     * 使用session验证
+     */
+    if(req.session.loginUser){
+        // 说明已经登录过
+        next()
+    }else{
+        handleNonToken(req, res, next)
         return;
     }
+
+    /**
+     * 使用cookie验证
+     */
+    // 剩下就是需要鉴权的api的逻辑
+    // let token = req.cookies.token;
+    // if(!token){
+    //     token = req.headers.authorization;// 从 header 的 authorization 中获取
+    // }
+    // if(!token){
+    //     handleNonToken(req, res, next);// 没有认证
+    //     return;
+    // }
     // 认证通过
-    const userId = decrypt(token);// 解密token
-    req.userId = userId;// 添加到请求
-    next();
+    // const userId = decrypt(token);// 解密token
+    // req.userId = userId;// 添加到请求
+    // next();
 }
 // 认证不通过
 function handleNonToken(req, res, next) {
