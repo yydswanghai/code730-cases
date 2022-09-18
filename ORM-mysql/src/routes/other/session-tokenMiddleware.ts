@@ -1,15 +1,13 @@
-import { getError } from './getSendResult'
+import { getError } from '../getSendResult'
 import { pathToRegexp } from 'path-to-regexp'
-import { jwtVerify } from './jwt'
 
 const needTokenApi = [
     { method: 'POST', path: '/api/student' },
     { method: 'PUT', path: '/api/student/:id' },
-    { method: 'GET', path: '/api/student' },
-    { method: 'GET', path: '/api/admin/whoami' }
+    { method: 'GET', path: '/api/student' }
 ]
 /**
- * 用于解析token
+ * 用于解析token - 使用session验证
  */
 export default function (req, res, next) {
     // 判断api是否需要token，请求方式和请求请求路径都匹配
@@ -23,15 +21,12 @@ export default function (req, res, next) {
         return;
     }
 
-    const result = jwtVerify(req)
-
-    if(result){
-        // 认证通过
-        req.userId = result.id;
-        next();
+    if(req.session.loginUser){
+        // 说明已经登录过
+        next()
     }else{
-        // 认证失败
-        handleNonToken(req, res, next);
+        handleNonToken(req, res, next)
+        return;
     }
 }
 // 认证不通过

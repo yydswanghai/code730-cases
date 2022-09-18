@@ -1,15 +1,14 @@
-import { getError } from './getSendResult'
+import { getError } from '../getSendResult'
 import { pathToRegexp } from 'path-to-regexp'
-import { jwtVerify } from './jwt'
+import { decrypt } from '../../utils/crypt'
 
 const needTokenApi = [
     { method: 'POST', path: '/api/student' },
     { method: 'PUT', path: '/api/student/:id' },
-    { method: 'GET', path: '/api/student' },
-    { method: 'GET', path: '/api/admin/whoami' }
+    { method: 'GET', path: '/api/student' }
 ]
 /**
- * 用于解析token
+ * 用于解析token - 使用cookie验证
  */
 export default function (req, res, next) {
     // 判断api是否需要token，请求方式和请求请求路径都匹配
@@ -23,16 +22,19 @@ export default function (req, res, next) {
         return;
     }
 
-    const result = jwtVerify(req)
-
-    if(result){
-        // 认证通过
-        req.userId = result.id;
-        next();
-    }else{
-        // 认证失败
-        handleNonToken(req, res, next);
+    // 剩下就是需要鉴权的api的逻辑
+    let token = req.cookies.token;
+    if(!token){
+        token = req.headers.authorization;// 从 header 的 authorization 中获取
     }
+    if(!token){
+        handleNonToken(req, res, next);// 没有认证
+        return;
+    }
+    // 认证通过
+    const userId = decrypt(token);// 解密token
+    req.userId = userId;// 添加到请求
+    next();
 }
 // 认证不通过
 function handleNonToken(req, res, next) {

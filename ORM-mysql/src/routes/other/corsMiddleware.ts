@@ -1,5 +1,5 @@
 /**
- * cors解决跨域
+ * cors解决跨域 原理
  */
 const whiteList = [
     'http://127.0.0.1:5500',

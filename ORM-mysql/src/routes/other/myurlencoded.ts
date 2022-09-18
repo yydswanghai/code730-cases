@@ -1,6 +1,6 @@
 import { parse } from 'querystring'
 /**
- * 自定义urlencoded中间件
+ * 自定义urlencoded中间件 原理
  */
 export default function (req, res, next) {
     if(req.headers['content-type'] === 'application/x-www-form-urlencoded'){
