@@ -5,7 +5,7 @@ import { jwtVerify } from './jwt'
 const needTokenApi = [
     { method: 'POST', path: '/api/student' },
     { method: 'PUT', path: '/api/student/:id' },
-    { method: 'GET', path: '/api/student' },
+    // { method: 'GET', path: '/api/student' },
     { method: 'GET', path: '/api/admin/whoami' }
 ]
 /**
