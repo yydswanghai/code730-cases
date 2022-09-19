@@ -66,21 +66,20 @@ class RequestHttp {
     }
 
     // 常用方法封装
-    get<T>(url: string, params?: object): Promise<ResultData<T>> {
-       return this.service.get(url, {params});
-    }
-    post<T>(url: string, params?: object): Promise<ResultData<T>> {
-       return this.service.post(url, params);
-    }
-    put<T>(url: string, params?: object): Promise<ResultData<T>> {
-       return this.service.put(url, params);
-    }
-    delete<T>(url: string, params?: object): Promise<ResultData<T>> {
-       return this.service.delete(url, {params});
-    }
-
     request(config: AxiosRequestConfig<any>): Promise<ResultData<any>>{
         return this.service.request(config)
+    }
+    get<T = any>(url: string, config?: AxiosRequestConfig): Promise<ResultData<T>> {
+       return this.service.get(url, config);
+    }
+    post<T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<ResultData<T>> {
+       return this.service.post(url, data, config);
+    }
+    put<T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<ResultData<T>> {
+       return this.service.put(url, data, config);
+    }
+    delete<T = any>(url: string, config?: AxiosRequestConfig): Promise<ResultData<T>> {
+       return this.service.delete(url, config);
     }
 }
 
