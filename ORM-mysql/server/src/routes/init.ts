@@ -6,6 +6,7 @@ import studentRouter from './api/student'
 import adminRouter from './api/admin'
 import errorMiddleware from './errorMiddleware'
 import tokenMiddleware from './tokenMiddleware'
+import apiLogMiddleware from './apiLogMiddleware'
 
 // 创建一个express应用
 const app = express();
@@ -34,6 +35,7 @@ app.use(tokenMiddleware);
 app.use(express.urlencoded({ extended: true }));
 // 解析 application/json 格式的请求体
 app.use(express.json());
+app.use(apiLogMiddleware)
 // 处理 api 的请求
 app.use('/api/student', studentRouter);
 app.use('/api/admin', adminRouter);
