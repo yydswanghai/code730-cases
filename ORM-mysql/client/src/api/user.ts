@@ -1,17 +1,12 @@
-import http from './request'
+import { http } from './http'
+import { delay } from '@/utils/'
 
-function delay(duratioin: number = 2000) {
-    return new Promise((resolve) => {
-        setTimeout(() => {
-            resolve(null);
-        }, duratioin);
-    });
-}
-
-/* 登录 */
-export async function login({ loginId = '', loginPwd = '' }) {
-    await delay(500)
-    return await http().request({
+/**
+ * 登录
+ */
+export async function login({ loginId, loginPwd }: { loginId: string, loginPwd: string }) {
+    await delay()
+    return await http.request({
         method: 'post',
         url: '/api/admin/login',
         data: {
@@ -20,14 +15,9 @@ export async function login({ loginId = '', loginPwd = '' }) {
         }
     })
 }
-/* 注销 */
-export async function loginOut() {
-    localStorage.removeItem("token");
-}
 
 export async function whoAmI() {
-    await delay();
-    return await http().request({
+    return await http.request({
         method: 'get',
         url: '/api/admin/whoami'
     })

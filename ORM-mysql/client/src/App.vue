@@ -11,7 +11,7 @@
       <router-link to="/protect">Protect</router-link> |
       <a v-if="isLoading">Loading...</a>
       <template v-else-if="userdata">
-        <span>{{ userdata }}</span>
+        <span>用户：{{ (userdata as any).loginId }}</span>
         <button @click="loginOut">注销</button>
       </template>
       <router-link v-else to="/login">Login</router-link>
@@ -24,18 +24,13 @@
 import { useUserStore } from '@/store/modules/user'
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
-import http from '@/api/request'
-
-http().request({
-  method: 'get',
-  url: '/api/student'
-})
 
 const router = useRouter();
 const userStore = useUserStore();
+userStore.whoAmI();// 检查用户
+
 const isLoading = computed(() => userStore.isLoading)
 const userdata = computed(() => userStore.data)
-
 
 const loginOut = () => {
   userStore.loginOut()

@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { login as apiLogin, loginOut as apiLoginOut, whoAmI as apiWhoAmI } from '@/api/user'
+import { login as apiLogin, whoAmI as apiWhoAmI } from '@/api/user'
 
 export const useUserStore = defineStore({
     id: 'app-user',
@@ -8,7 +8,7 @@ export const useUserStore = defineStore({
         isLoading: false,
     }),
     actions: {
-        async login({ loginId, loginPwd }: { loginId: string, loginPwd: string }){
+        async login({ loginId, loginPwd }: any){
             this.isLoading = true;
             const resp = await apiLogin({ loginId, loginPwd });
             this.isLoading = false;
@@ -19,13 +19,15 @@ export const useUserStore = defineStore({
         },
         loginOut(){
             this.data = null;
-            apiLoginOut()
+            localStorage.removeItem("token");
         },
         async whoAmI(){
             this.isLoading = true;
             try {
                 const resp = await apiWhoAmI()
-                this.data = resp.data
+                if(resp.code === 0){
+                    this.data = resp.data;
+                }
             } catch (error) {
                 this.data = null
             }
