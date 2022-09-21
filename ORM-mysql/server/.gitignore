@@ -1,6 +1,7 @@
 node_modules/
 dist/
 logs/
+upload/
 
 # Editor directories and files
 .vscode/*

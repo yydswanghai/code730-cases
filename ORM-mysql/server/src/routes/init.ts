@@ -4,6 +4,7 @@ import cookieParser from 'cookie-parser'
 import cors from 'cors'
 import studentRouter from './api/student'
 import adminRouter from './api/admin'
+import uploadRouter from './api/upload'
 import errorMiddleware from './errorMiddleware'
 import tokenMiddleware from './tokenMiddleware'
 import apiLogMiddleware from './apiLogMiddleware'
@@ -39,6 +40,7 @@ app.use(apiLogMiddleware)
 // 处理 api 的请求
 app.use('/api/student', studentRouter);
 app.use('/api/admin', adminRouter);
+app.use('/api/upload', uploadRouter);
 
 // 处理错误的中间件
 app.use(errorMiddleware);
