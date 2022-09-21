@@ -8,7 +8,7 @@ const router = express.Router();
 
 const storage = multer.diskStorage({// 磁盘存储引擎可以让你控制文件的存储
     // 是用来确定上传的文件应该存储在哪个文件夹中
-    destination: function (res, file, cb) {
+    destination: function (res, file, cb) {// 这种方式需要手动自己添加upload文件目录
         cb(null, resolve(__dirname, '../../public/upload'))
     },
     // 用于确定文件夹中的文件名的确定

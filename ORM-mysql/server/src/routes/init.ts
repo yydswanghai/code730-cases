@@ -5,6 +5,7 @@ import cors from 'cors'
 import studentRouter from './api/student'
 import adminRouter from './api/admin'
 import uploadRouter from './api/upload'
+import downloadRouter from './api/download'
 import errorMiddleware from './errorMiddleware'
 import tokenMiddleware from './tokenMiddleware'
 import apiLogMiddleware from './apiLogMiddleware'
@@ -41,6 +42,7 @@ app.use(apiLogMiddleware)
 app.use('/api/student', studentRouter);
 app.use('/api/admin', adminRouter);
 app.use('/api/upload', uploadRouter);
+app.use('/download', downloadRouter)
 
 // 处理错误的中间件
 app.use(errorMiddleware);
