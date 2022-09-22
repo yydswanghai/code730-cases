@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>生成二维码</title>
+</head>
+<body>
+    <style>
+        body{
+            background: #f5f6f7;
+        }
+        textarea{
+            padding: 10px;
+            max-width: 100%;
+            line-height: 1.5;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            box-shadow: 1px 1px 1px #999;
+        }
+        button{
+            color: #fff;
+            border: 1px solid #409eff;
+            background-color: #409eff;
+            box-shadow: 1px 1px 1px #999;
+            padding: 12px 20px;
+            outline: none;
+        }
+        button:active{
+            background: #3a8ee6;
+            border-color: #3a8ee6;
+            color: #fff;
+        }
+        .box{
+            width: 310px;
+        }
+        .flex{
+            display: flex;
+        }
+    </style>
+    <div class="flex">
+        <div class="box">
+            <textarea id="textarea" rows="5" cols="33"></textarea>
+            <button id="btn">生成二维码</button>
+            <button id="diy-btn">生成个性化二维码</button>
+        </div>
+        <img src="" width="200" id="img" />
+        <img src="" width="200" id="diy-img" />
+    </div>
+
+    <script>
+        const textarea = document.querySelector('#textarea');
+
+        document.querySelector('#btn').onclick = function () {
+            const img = document.querySelector('#img');
+            fetch('http://localhost:9525/api/qrcode', {
+                method: 'POST',
+                headers: { 'content-type': 'application/json' },
+                body: JSON.stringify({ str: textarea.value })
+            })
+            .then(r => r.json())
+            .then(resp => {
+                if(resp.code === 0){
+                    img.src = resp.data;
+                }
+            })
+        }
+        document.querySelector('#diy-btn').onclick = function () {
+            const img = document.querySelector('#diy-img');
+            fetch('http://localhost:9525/api/qrcode/diy', {
+                method: 'POST',
+                headers: { 'content-type': 'application/json' },
+                body: JSON.stringify({ str: textarea.value })
+            })
+            .then(r => r.json())
+            .then(resp => {
+                if(resp.code === 0){
+                    img.src = resp.data;
+                }
+            })
+        }
+    </script>
+</body>
+</html>

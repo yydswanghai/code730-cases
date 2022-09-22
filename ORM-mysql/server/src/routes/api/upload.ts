@@ -85,7 +85,7 @@ async function mark(waterFile, originFile, targetPath, proportion = 5, marginPro
 router.post('/water', upload.single('waterimg'), async (req, res) => {
     const url = `/upload/${req.file.filename}`;
     const newPath = resolve(__dirname, '../../public/upload/', req.file.filename);
-    const waterPath = resolve(__dirname, '../../public/origin/water.jpeg');
+    const waterPath = resolve(__dirname, '../../public/img/water.jpeg');
     await mark(waterPath, req.file.path, newPath);
     res.send({
         code: 0,

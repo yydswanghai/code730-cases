@@ -3,6 +3,7 @@ dist/
 logs/
 src/public/origin/
 src/public/upload/
+src/public/qrimg/
 resources/
 # Editor directories and files
 .vscode/*
