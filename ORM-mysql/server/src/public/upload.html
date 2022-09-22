@@ -7,25 +7,46 @@
     <title>文件上传</title>
 </head>
 <body>
-    <div>
-        <div style="margin: 10px 0;">
-            <input type="text" name="a">
+    <style>
+        .container{
+            display: flex;
+        }
+        .box{
+            margin: 10px 0;
+        }
+    </style>
+    <div class="container">
+        <div class="item">
+            <div class="box">
+                <input type="text" name="a">
+            </div>
+            <div class="box">
+                <input type="file" name="img" accept="image/*" multiple>
+            </div>
+            <div class="box">
+                <button id="img-btn">提交</button>
+            </div>
+            <div class="box">
+                <img src="" width="200" id="img" />
+            </div>
         </div>
-        <div style="margin: 10px 0;">
-            <input type="file" name="img" accept="image/*" multiple>
-        </div>
-        <div style="margin: 10px 0;">
-            <button>提交</button>
-        </div>
-        <div style="margin: 10px 0;">
-            <img src="" width="100" />
+        <div class="item">
+            <div class="box">
+                <input type="file" name="waterimg" accept="image/*" multiple>
+            </div>
+            <div class="box">
+                <button id="waterimg-btn">提交-添加水印</button>
+            </div>
+            <div class="box">
+                <img src="" width="200" id="waterimg" />
+            </div>
         </div>
     </div>
     <script>
         function upload() {
             const inpA = document.querySelector('[name=a]');
             const inpFile = document.querySelector('[name=img]');
-            const img = document.querySelector('img');
+            const img = document.querySelector('#img');
             const formData = new FormData();
             formData.append('a', inpA.value);
             for (const file of inpFile.files) {
@@ -39,13 +60,33 @@
             .then(resp => {
                 if(resp.code === 0){
                     img.src = resp.data;
-                    console.log(resp.msg)
                 }else{
                     console.log(resp.msg)
                 }
             })
         }
-        document.querySelector('button').onclick = upload;
+        function uploadWater() {
+            const inpFile = document.querySelector('[name=waterimg]');
+            const img = document.querySelector('#waterimg');
+            const formData = new FormData();
+            for (const file of inpFile.files) {
+                formData.append('waterimg', file, file.name);
+            }
+
+            fetch('/api/upload/water', {
+                method: 'POST',
+                body: formData
+            }).then(r => r.json())
+            .then(resp => {
+                if(resp.code === 0){
+                    img.src = resp.data;
+                }else{
+                    console.log(resp.msg)
+                }
+            })
+        }
+        document.querySelector('#img-btn').onclick = upload;
+        document.querySelector('#waterimg-btn').onclick = uploadWater;
     </script>
 </body>
 </html>

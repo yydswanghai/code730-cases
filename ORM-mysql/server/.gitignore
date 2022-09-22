@@ -1,7 +1,8 @@
 node_modules/
 dist/
 logs/
-upload/
+src/public/origin/
+src/public/upload/
 resources/
 # Editor directories and files
 .vscode/*
