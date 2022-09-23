@@ -3,8 +3,13 @@
  */
 import { getError } from './getSendResult'
 import multer from 'multer'
+import { AdminError } from './api/admin'
 export default function (err, req, res, next) {
     if(err){
+        if(err instanceof AdminError){
+            res.status(200).send(getError(err.message))
+            return;
+        }
         // 文件上传错误
         if(err instanceof multer.MulterError){
             res.status(200).send(getError(err.message))
