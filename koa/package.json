@@ -1,0 +1,23 @@
+{
+  "name": "koa-demo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index",
+  "scripts": {
+    "start": "ts-node src/index",
+    "dev": "nodemon --watch src --ext ts -x npm run start",
+    "debug": "nodemon -w src -e ts --exec node --inspect -r ts-node/register src/index.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/node": "^18.7.18",
+    "koa": "^2.13.4"
+  },
+  "devDependencies": {
+    "@types/koa": "^2.13.5",
+    "nodemon": "^2.0.20",
+    "ts-node": "^10.9.1"
+  }
+}
