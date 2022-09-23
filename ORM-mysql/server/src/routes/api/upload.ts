@@ -38,7 +38,7 @@ const upload = multer({
 })
 // 这里 img 与前端上传附件的 name="img" 对应
 router.post('/', upload.single('img'), (req, res) => {
-    const url = `/upload/${req.file.filename}`
+    const url = `/origin/${req.file.filename}`
     res.send({
         code: 0,
         msg: '上传成功',

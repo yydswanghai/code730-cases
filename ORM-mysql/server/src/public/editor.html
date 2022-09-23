@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>富文本编辑</title>
+</head>
+<body>
+    <style>
+        #editor—wrapper {
+            border: 1px solid #ccc;
+            z-index: 100; /* 按需定义 */
+        }
+        #toolbar-container { border-bottom: 1px solid #ccc; }
+        #editor-container { height: 300px; }
+    </style>
+    <h1>添加一本书籍</h1>
+    <p>书籍名称：<input type="text" id="name" /></p>
+    <p>作者：<input type="text" id="author" /></p>
+    <div>
+        书籍描述：
+        <div id="editor—wrapper">
+            <div id="toolbar-container"><!-- 工具栏 --></div>
+            <div id="editor-container"><!-- 编辑器 --></div>
+        </div>
+    </div>
+    <div>
+        <button>提交</button>
+    </div>
+    <div id="render">
+    </div>
+    <link href="https://unpkg.com/@wangeditor/editor@latest/dist/css/style.css" rel="stylesheet">
+    <script src="https://unpkg.com/@wangeditor/editor@latest/dist/index.js"></script>
+    <script>
+        const $ = (selector) => document.querySelector(selector);
+        const { createEditor, createToolbar } = window.wangEditor
+
+        const editorConfig = {
+            placeholder: '请输入...',
+            MENU_CONF: {}
+        }
+        editorConfig.MENU_CONF['uploadImage'] = {
+            server: '/api/upload',
+            fieldName: 'img',
+            customInsert(res, insertFn){
+                insertFn(res.data)
+            }
+        }
+        const editor = new createEditor({
+            selector: '#editor-container',
+            html: '<p><br></p>',
+            config: editorConfig,
+            mode: 'default',
+        })
+        const toolbar = createToolbar({
+            editor,
+            selector: '#toolbar-container',
+            config: {},
+            mode: 'default', // or 'simple'
+        })
+        async function addBook() {
+            const name = $('#name').value;
+            const description = editor.getHtml();
+            const author = $('#author').value;
+            const resp = await fetch('/api/book', {
+                method: 'POST',
+                headers: { 'content-type': 'application/json' },
+                body: JSON.stringify({
+                    name,
+                    description,
+                    author,
+                    publishDate: Date.now()
+                })
+            }).then(r => r.json())
+            console.log(resp)
+        }
+        $('button').onclick = addBook;
+
+        async function render() {
+            const resp = await fetch('/api/book/21', {
+                method: 'GET'
+            }).then(r => r.json())
+            if(resp.code === 0){
+                const data = resp.data;
+                $('#render').innerHTML = `
+                    <p>书名：${data.name}</p>
+                    <p>作者：${data.author}</p>
+                    <p>描述：${data.description}</p>
+                `
+            }
+        }
+        render();
+    </script>
+</body>
+</html>

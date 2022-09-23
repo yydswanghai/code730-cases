@@ -7,6 +7,7 @@ import adminRouter from './api/admin'
 import uploadRouter from './api/upload'
 import downloadRouter from './api/download'
 import qrcodeRouter from './api/qrcode'
+import bookRouter from './api/book'
 import errorMiddleware from './errorMiddleware'
 import tokenMiddleware from './tokenMiddleware'
 import corsMiddleware from './corsMiddleware'
@@ -26,7 +27,13 @@ app.use(imgProtectMiddleware);
 app.use(corsMiddleware);
 
 // 映射public目录中的静态资源
-app.use(express.static(resolve(__dirname, '../public')));
+app.use(express.static(resolve(__dirname, '../public'), {
+    setHeaders(res, path: string){
+        if(!path.endsWith('.html')){// 不缓存 html 文件
+            res.header('Cache-Control', `max-age=${3600*24}`)
+        }
+    }
+}));
 app.use(cookieParser());
 app.use(tokenMiddleware);
 // 解析 application/x-www-form-urlencoded 格式的请求体
@@ -43,6 +50,7 @@ app.use('/api/admin', adminRouter);
 app.use('/api/upload', uploadRouter);
 app.use('/download', downloadRouter)
 app.use('/api/qrcode', qrcodeRouter)
+app.use('/api/book', bookRouter)
 // 处理错误的中间件
 app.use(errorMiddleware);
 
