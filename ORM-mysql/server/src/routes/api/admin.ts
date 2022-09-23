@@ -8,6 +8,7 @@ const router = express.Router()
 router.post('/login',
     asyncHandler(async (req, res) => {
         const { loginId, loginPwd } = req.body;
+
         const result = await login({ loginId, loginPwd });
         if(result){
             let value = result.id;
