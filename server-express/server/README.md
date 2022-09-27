@@ -1,6 +1,14 @@
 ## 服务端
 
-node 调试
+数据库：mysql
+
+Node-ORM：sequelize	https://github.com/demopark/sequelize-docs-Zh-CN/tree/v6
+
+node-web应用框架：express	https://expressjs.com/  中文网 https://www.expressjs.com.cn/
+
+
+
+* node 调试
 
 1. 直接使用`.vscode/launch.json` 配置，然后断点
 
