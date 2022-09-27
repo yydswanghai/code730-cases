@@ -1,5 +1,5 @@
 {
-  "name": "nodejs-net-demo",
+  "name": "nodejs-http-demo",
   "version": "1.0.0",
   "description": "",
   "main": "src/index.ts",
@@ -8,8 +8,7 @@
     "start:client": "ts-node src/client.ts",
     "start:server": "ts-node src/server.ts",
     "start:https": "ts-node src/https.ts",
-    "dev": "nodemon --watch src -e ts --exec ts-node src/index.ts",
-    "build": "rd /s /q dist & tsc"
+    "dev": "nodemon --watch src --ext ts -x npm run start"
   },
   "author": "",
   "license": "ISC",

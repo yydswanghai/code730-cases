@@ -6,8 +6,7 @@
   "scripts": {
     "start": "ts-node src/index.ts",
     "start:client": "ts-node src/client.ts",
-    "dev": "nodemon --watch src -e ts --exec ts-node src/index.ts",
-    "build": "rd /s /q dist & tsc"
+    "dev": "nodemon --watch src --ext ts -x npm run start"
   },
   "author": "",
   "license": "ISC",
