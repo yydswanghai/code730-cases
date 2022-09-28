@@ -6,7 +6,6 @@ import md5 from 'md5'
 
 export async function addAdmin({ loginId, loginPwd }: AdminAttributes) {
     loginPwd = md5(loginPwd)
-    // 应该判断adminObj的各种属性是否合理，以及账号是否已存在
     const ins = await Admin.create({ loginId, loginPwd })
     console.log('添加管理员成功')
     return ins.toJSON()

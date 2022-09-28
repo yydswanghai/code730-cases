@@ -5,7 +5,6 @@ import Book from '../models/Book'
 import { Op } from 'sequelize'
 
 export async function addBook(obj) {
-    // 应该判断adminObj的各种属性是否合理，以及账号是否已存在
     const ins = await Book.create(obj)
     return ins.toJSON()
 }

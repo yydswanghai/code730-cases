@@ -3,7 +3,6 @@
  */
 import Class from '../models/Class'
 export async function addClass(obj) {
-    // 应该判断adminObj的各种属性是否合理，以及账号是否已存在
     const ins = await Class.create(obj)
     return ins.toJSON()
 }
