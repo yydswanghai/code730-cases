@@ -1,6 +1,11 @@
 import { sequelize } from './db'
 import { DataTypes } from 'sequelize'
 
+export interface ClassAttributes {
+    name: string
+    openDate?: string
+}
+
 export default sequelize.define('Class', {
     name: {
         type: DataTypes.STRING,

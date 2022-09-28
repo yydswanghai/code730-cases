@@ -3,10 +3,10 @@ import { DataTypes } from 'sequelize'
 
 export interface BookAttributes {
     name: string
-    imgurl: string
-    publishDate: string
     author: string
-    description: string
+    publishDate?: string
+    imgurl?: string
+    description?: string
 }
 
 export default sequelize.define('Book', {
