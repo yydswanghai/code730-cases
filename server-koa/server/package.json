@@ -16,8 +16,12 @@
     "@types/node": "^18.7.18",
     "koa": "^2.13.4",
     "log4js": "^6.6.1",
+    "md5": "^2.3.0",
     "mime": "^3.0.0",
-    "sequelize": "^6.23.1"
+    "moment": "^2.29.4",
+    "mysql2": "^2.3.3",
+    "sequelize": "^6.23.1",
+    "validate.js": "^0.13.1"
   },
   "devDependencies": {
     "@types/koa": "^2.13.5",

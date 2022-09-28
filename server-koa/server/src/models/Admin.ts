@@ -1,6 +1,11 @@
 import { sequelize } from './db'
 import { DataTypes } from 'sequelize'
 
+export interface AdminAttributes {
+    loginId: string
+    loginPwd: string
+}
+
 export default sequelize.define('Admin', {
     loginId: {
         type: DataTypes.STRING,

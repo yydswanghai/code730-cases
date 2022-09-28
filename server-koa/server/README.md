@@ -8,6 +8,10 @@ node-web应用框架：koa	https://github.com/koajs/koa  中文网 https://koa.b
 
 日志：log4js https://log4js-node.github.io/log4js-node/index.html
 
+数据验证：validate.js  https://validatejs.org/
+
+时间：moment http://momentjs.cn/ format含义 http://momentjs.cn/docs/#/displaying/format/
+
 * node 调试
 
 1. 直接使用`.vscode/launch.json` 配置，然后断点
