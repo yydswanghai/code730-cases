@@ -2,6 +2,13 @@ import { sequelize } from './db'
 import { DataTypes } from 'sequelize'
 import { utc } from 'moment'
 
+export interface StudentAttributes {
+    name: string
+    birthday: string
+    sex: boolean
+    mobile: string
+}
+
 export default sequelize.define('Student', {
     name: {
         type: DataTypes.STRING,

@@ -1,14 +1,18 @@
 /**
  * 学生
  */
-import Student from '../models/Student'
+import Student, { StudentAttributes } from '../models/Student'
 import Class from '../models/Class'
 import { Op } from 'sequelize'
 import { validators, async } from 'validate.js'
 import { utc } from 'moment'
 import { pick } from '../utils/propertyHelper'
 
-export async function addStudent(obj = {}) {
+interface addStu extends StudentAttributes {
+    ClassId: number
+}
+
+export async function addStudent(obj: addStu) {
     // 对传入的数据进行过滤，只保留数据库需要的
     obj = pick(obj, 'name', 'birthday', 'sex', 'mobile', 'ClassId');
     // 自定义验证，这里需要通过数据库，所以是异步验证
@@ -66,70 +70,64 @@ export async function addStudent(obj = {}) {
         }
     }
     // 异步验证，如果通过啥都没有正常继续运行，失败直接错误
-    await async(obj, rule)
-    const ins = await Student.create(obj)
-    return ins.toJSON()
+    try {
+        await async(obj, rule)
+        const ins = await Student.create(obj as any)
+        return ins.toJSON();
+    } catch (error) {
+        console.log(error)
+        return null;
+    }
 }
 
-export async function deleteStudent(id) {
+// 删除
+export async function deleteStudent(id: number) {
     return await Student.destroy({
-        where: {
-            id
-        }
+        where: { id }
     })
 }
 
-export async function updateStudent(id, obj) {
+// 更新
+export async function updateStudent(id: number, obj) {
     return await Student.update(obj, {
-        where: {
-            id,
-        },
-    });
+        where: { id },
+    })
 }
 
-/**
- * 通过id查询学生
- */
-export async function getStudentById(id: string) {
+// 通过id查询学生
+export async function getStudentById(id: number) {
     const result = await Student.findByPk(id);
     if(result){
         return result.toJSON();
     }
     return null;
 }
-/**
- * 查询所有的学生
- */
-export interface findStudents {
+
+// 分页查询所有的学生
+export interface StudentPaging {
     page?: number
-    limit?: number
-    sex?: number
+    pageSize?: number
+    sex?: 0 | 1
     name?: string
 }
 
-/**
- * 查询学生
- * 注意添加ClassId前需要 Class与Student建立 外键联系
- */
-export async function getStudents({ page = 1, limit = 10, sex = -1, name = '' }: findStudents = {}) {
+export async function getStudents({ page = 1, pageSize = 10, sex = 1, name = '' }: StudentPaging = {}){
     const where: any = {};
-    if(sex !== -1){
-        where.sex = !!sex
-    }
+    where.sex = !!sex
     if(name){
         where.name = {
             [Op.like]: `%${name}%`
         }
     }
     const result = await Student.findAndCountAll({
-        attributes: ['id', 'name', 'sex', 'birthday', 'age'],
+        attributes: ['id', 'name', 'sex', 'birthday', 'age'],// 仅返回的值
         where,
         include: [Class],
-        offset: (page-1)*limit,
-        limit
+        offset: (page - 1) * pageSize,
+        limit: pageSize
     })
     return {
         total: result.count,
         datas: JSON.parse(JSON.stringify(result.rows))
-    };
+    }
 }

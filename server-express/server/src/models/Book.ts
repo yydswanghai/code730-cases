@@ -1,6 +1,14 @@
 import { sequelize } from './db'
 import { DataTypes } from 'sequelize'
 
+export interface BookAttributes {
+    name: string
+    author: string
+    publishDate?: string
+    imgurl?: string
+    description?: string
+}
+
 export default sequelize.define('Book', {
     name: {
         type: DataTypes.STRING,
