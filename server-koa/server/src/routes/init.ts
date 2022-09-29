@@ -8,6 +8,7 @@ import session from 'koa-session'
 import tokenMid from './middleware/token4jwt'
 import corsMid from './middleware/cors'
 import proxyMid from './middleware/proxy'
+import apiLogMid from './middleware/apiLog'
 import adminRouter from './api/admin'
 
 const app = new Koa();
@@ -27,6 +28,7 @@ app.use(session(CONFIG, app))
 app.use(corsMid)
 app.use(koaBody())// 处理请求
 app.use(proxyMid)
+app.use(apiLogMid)
 app.use(tokenMid)
 app.use(historyApiFallback({
     whiteList: ['/api']
