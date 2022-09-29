@@ -6,8 +6,8 @@ import { connectLogger } from 'log4js'
 /**
  * 自定义日志
  */
-// export default (req, res, next) => {
-//     next();
+// export default async function (ctx, next) {
+//     await next();
 //     apiLogger.debug(`${req.method} ${req.path} ${req.ip}`)
 // }
 export default async function (ctx: ParameterizedContext, next: Next) {
