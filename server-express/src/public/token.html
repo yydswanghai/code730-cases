@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录</title>
+</head>
+<body>
+    <div>
+        <p>账号：<input type="text" name="loginId"></p>
+        <p>密码：<input type="password" name="loginPwd"></p>
+        <p>
+            <button id="btn-cook">cook登录</button>
+            <button id="btn-sess">sess登录</button>
+            <button id="btn-jwt">jwt登录</button>
+        </p>
+        <p>
+            <button id="whoami">验证身份</button>
+            <button id="jwtwhoami">jwt验证身份</button>
+        </p>
+    </div>
+    <script>
+        const loginId = document.querySelector('[name=loginId]')
+        const loginPwd = document.querySelector('[name=loginPwd]')
+        // 这里测试记得在routes/init 切换对应的 token中间件的
+        document.querySelector('#btn-cook').onclick = function () {
+            fetch(`/api/admin/login4cookie`, {
+                method: 'POST',
+                headers: { 'content-type': 'application/json' },
+                body: JSON.stringify({ loginId: loginId.value, loginPwd: loginPwd.value })
+            })
+        }
+        document.querySelector('#btn-sess').onclick = function () {
+            fetch(`/api/admin/login4session`, {
+                method: 'POST',
+                headers: { 'content-type': 'application/json' },
+                body: JSON.stringify({ loginId: loginId.value, loginPwd: loginPwd.value })
+            })
+        }
+        document.querySelector('#btn-jwt').onclick = function () {
+            fetch(`/api/admin/login`, {
+                method: 'POST',
+                headers: { 'content-type': 'application/json' },
+                body: JSON.stringify({ loginId: loginId.value, loginPwd: loginPwd.value })
+            })
+            .then(r => {
+                localStorage.setItem('token', r.headers.get('authorization'))
+                r.json()
+            })
+            .then(res => {
+                if(res && res.code === 0){
+                    // res.data
+                }
+            })
+        }
+        document.querySelector('#whoami').onclick = function () {
+            fetch('/api/admin/whoami', {
+                method: 'GET'
+            })
+        }
+        document.querySelector('#jwtwhoami').onclick = function () {
+            const token = localStorage.getItem('token')
+            fetch('/api/admin/whoami', {
+                method: 'GET',
+                headers: { 'authorization': token }
+            })
+        }
+    </script>
+</body>
+</html>
