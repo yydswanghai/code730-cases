@@ -3,7 +3,7 @@
  */
 import Admin, { AdminAttributes } from '../models/Admin'
 import md5 from 'md5'
-import { validators, async } from 'validate.js'
+import { validators, async, validate } from 'validate.js'
 
 // 添加，需要验证 loginId, loginPwd 是否合理，以及账号是否已存在
 export async function addAdmin({ loginId, loginPwd }: AdminAttributes) {
@@ -68,6 +68,24 @@ export async function updateAdmin(id: number, { loginId, loginPwd }: AdminAttrib
 
 // 登录
 export async function login({ loginId, loginPwd }: AdminAttributes) {
+    const val = validate({ loginId, loginPwd }, {
+        loginId: {
+            presence: {
+                allowEmpty: false,
+                message: '登录账号不能为空'
+            }
+        },
+        loginPwd: {
+            presence: {
+                allowEmpty: false,
+                message: '登录密码不能为空'
+            }
+        }
+    })
+    if(val){
+        console.log(val)
+        return null;
+    }
     loginPwd = md5(loginPwd);
     const result: any = await Admin.findOne({
         where: {
@@ -80,6 +98,7 @@ export async function login({ loginId, loginPwd }: AdminAttributes) {
         console.log('登录成功');
         return result.toJSON();
     }
+    // 账号或密码错误
     return null;
 }
 

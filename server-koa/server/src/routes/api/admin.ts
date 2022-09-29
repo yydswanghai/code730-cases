@@ -1,6 +1,7 @@
 import Router from '@koa/router'
 import { ParameterizedContext } from 'koa'
 import { login } from '../../services/adminService'
+import { getSuccess, getError } from './getSendResult'
 
 // 自定义错误
 export class AdminError extends Error {
@@ -16,15 +17,11 @@ const router = new Router({
 })
 
 router.post('/login', async (ctx: ParameterizedContext) => {
-
     const result = await login(ctx.request.body);
-    if(result){
-        
-    }else{// null 登录失败
-        ctx.body = {
-            code: 1002,
-            msg: '登录失败'
-        }
+    if(result){// 登录成功
+        ctx.body = getSuccess(result);
+    }else{// 登录失败
+        ctx.body = getError('登录失败', 1002);
     }
 })
 
