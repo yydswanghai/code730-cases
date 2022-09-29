@@ -95,7 +95,6 @@ export async function login({ loginId, loginPwd }: AdminAttributes) {
     })
     // 判断用户名密码区分大小写
     if(result && result.loginId === loginId && result.loginPwd === loginPwd){
-        console.log('登录成功');
         return result.toJSON();
     }
     // 账号或密码错误

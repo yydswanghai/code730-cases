@@ -6,7 +6,8 @@ import { historyApiFallback } from 'koa2-connect-history-api-fallback'
 import koaBody from 'koa-body'
 import session from 'koa-session'
 import tokenMid from './middleware/token4jwt'
-
+import corsMid from './middleware/cors'
+import proxyMid from './middleware/proxy'
 import adminRouter from './api/admin'
 
 const app = new Koa();
@@ -23,14 +24,19 @@ const CONFIG = {
     renew: false
 }
 app.use(session(CONFIG, app))
+app.use(corsMid)
 app.use(koaBody())// 处理请求
+app.use(proxyMid)
 app.use(tokenMid)
-
 app.use(historyApiFallback({
     whiteList: ['/api']
 }))
 app.use(koaStatic(resolve(__dirname, '../../public/')))
 
 app.use(adminRouter)
+
+app.on('error', err => {
+    console.error(err);
+})
 
 server.listen(9525, () => console.log('server listening 9525'))
