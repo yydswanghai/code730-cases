@@ -61,34 +61,16 @@ router.post('/login4session', async (ctx: ParameterizedContext) => {
     }
 })
 
-// 不同角色登录
-enum authEnums {
-    user1 = 'app_1:9d4f7428-7ecb-48bd-9f02-2edce91c88f6',
-    user2 = 'app_2:51cb84b0-3e27-4e0c-9628-fbf84487a02d',
-    server = 'server:0269be50-5b3e-49e8-817e-c3e2ad0a1411'
-}
-
-function getatobStr(str: string) {
-    const arr = str.split(' ');
-    const newStr = arr.length === 1 ? arr[0] : arr[1];
-    return atob(newStr);
-}
-
 router.post('/oauth/token', async (ctx: ParameterizedContext) => {
-    if(!ctx.headers.authorization){
-        ctx.body = getError('登录失败，请求没有authorization', 1002);
-        return;
-    }
     const { scope, type } = ctx.query;
-    const authStr = getatobStr(ctx.headers.authorization);
     let isSucc = false;
-    if(scope === 'app' && type === '1' && authStr === authEnums.user1){
+    if(scope === 'app' && type === '1'){
         isSucc = true;
     }
-    else if(scope === 'app' && type === '2' && authStr === authEnums.user2){
+    else if(scope === 'app' && type === '2'){
         isSucc = true;
     }
-    else if(scope === 'server' && authStr === authEnums.server){
+    else if(scope === 'server'){
         isSucc = true;
     }
 
