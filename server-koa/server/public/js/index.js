@@ -8,17 +8,9 @@ fetch('/api/admin/oauth/token?grant_type=password&scope=app&type=1', {
     body: Qs.stringify({ loginId: 'admin', loginPwd: 'admin' })
 })
 
-// axios.request({
-//     method: 'post',
-//     url: '/api/admin/oauth/token',
-//     headers: { 'content-type': 'application/x-www-form-urlencoded' },
-//     params: {
-//         grant_type: 'password',
-//         scope: 'app',
-//         type: '1',
-//     },
-//     data: Qs.stringify({
-//         loginId: 'admin',
-//         loginPwd: 'admin',
-//     })
+// fetch('/api/admin/whoami', {
+//     method: 'GET',
+//     headers: {
+//         'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNjY1MjIxMzE2LCJleHAiOjE2NjUzMDc3MTZ9.z51iM7d0SEarvEj44rAJ1Dc581QgDM-vndOULqyiSkw'
+//     }
 // })

@@ -1,6 +1,7 @@
 import { getError } from '../getSendResult'
 import { pathToRegexp } from 'path-to-regexp'
 import { jwtVerify } from './jwt'
+import { JwtPayload } from 'jsonwebtoken'
 import { ParameterizedContext, Next } from 'koa'
 
 const needTokenApi = [// 需要鉴权的api
@@ -23,7 +24,7 @@ export default async function (ctx: ParameterizedContext, next: Next) {
 
     const token = jwtVerify(ctx);
     if(token){// 认证通过
-        ctx.state.userId = token.id;
+        ctx.state.userId = (token as JwtPayload).id;
         await next();
     }else{// 认证失败
         ctx.body = getError('你还没有认证身份', 403);

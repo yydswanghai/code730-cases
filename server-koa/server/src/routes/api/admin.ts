@@ -76,8 +76,8 @@ router.post('/oauth/token', async (ctx: ParameterizedContext) => {
 
     if(isSucc){
         const result = await login(ctx.request.body);
-        jwtPublish(ctx, { id: result.id });
-        ctx.body = getSuccess(null);
+        const token = jwtPublish(ctx, { id: result.id });
+        ctx.body = getSuccess({ token });
     }else{
         ctx.body = getError('登录失败', 1002);
     }

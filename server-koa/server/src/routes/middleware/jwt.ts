@@ -11,6 +11,7 @@ export function jwtPublish(ctx: ParameterizedContext, info = {}, maxAge = 3600 *
         expiresIn: maxAge
     })
     ctx.set('Authorization', token)
+    return token;
 }
 
 /**
@@ -27,6 +28,7 @@ export function jwtVerify(ctx: ParameterizedContext) {
     try {
         return jwt.verify(token, secrect);
     } catch (error) {
+        console.log(error)
         return null;
     }
 }
