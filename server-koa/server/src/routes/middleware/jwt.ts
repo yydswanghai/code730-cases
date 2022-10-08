@@ -10,7 +10,7 @@ export function jwtPublish(ctx: ParameterizedContext, info = {}, maxAge = 3600 *
     const token = jwt.sign(info, secrect, {
         expiresIn: maxAge
     })
-    ctx.set('authorization', token)
+    ctx.set('Authorization', token)
 }
 
 /**

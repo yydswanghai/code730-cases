@@ -1,4 +1,5 @@
 import Koa from 'koa'
+import { ParameterizedContext } from 'koa'
 import http from 'http'
 import { resolve } from 'path'
 import koaStatic from 'koa-static'
@@ -33,7 +34,16 @@ app.use(tokenMid)
 app.use(historyApiFallback({
     whiteList: ['/api']
 }))
-app.use(koaStatic(resolve(__dirname, '../../public/')))
+app.use(koaStatic(
+    resolve(__dirname, '../../public/'),
+    {
+        setHeaders(res: ParameterizedContext["res"], path: string){
+            if(!path.endsWith('.html')){// 不缓存 html 文件
+                res.setHeader('Cache-Control', `max-age=${3600*24}`)
+            }
+        }
+    }
+))
 
 app.use(adminRouter)
 
