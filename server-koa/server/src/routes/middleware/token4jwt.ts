@@ -8,7 +8,8 @@ const needTokenApi = [// 需要鉴权的api
     { method: 'POST', path: '/api/student' },
     { method: 'PUT', path: '/api/student/:id' },
     { method: 'GET', path: '/api/student' },
-    { method: 'GET', path: '/api/admin/whoami' }
+    { method: 'GET', path: '/api/admin/whoami' },
+    { method: 'GET', path: '/api/admin/loginInfo' },
 ]
 
 export default async function (ctx: ParameterizedContext, next: Next) {

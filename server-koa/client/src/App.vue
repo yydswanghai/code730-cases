@@ -1,54 +1,67 @@
 <template>
-  <div>
-    <a href="https://vitejs.dev" target="_blank">
-      <img src="/vite.svg" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://vuejs.org/" target="_blank">
-      <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-    </a>
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/protect">Protect</router-link> |
-      <a v-if="isLoading">Loading...</a>
-      <template v-else-if="userdata">
-        <span>用户：{{ (userdata as any).loginId }}</span>
-        <button @click="loginOut">注销</button>
-      </template>
-      <router-link v-else to="/login">Login</router-link>
-    </div>
-    <router-view />
-  </div>
+  <NConfigProvider
+    :locale="zhCN"
+    :date-locale="dateZhCN"
+    :theme="theme"
+    :theme-overrides="themeOverrides"
+  >
+    <AppProvider>
+      <RouterView />
+    </AppProvider>
+  </NConfigProvider>
 </template>
 
-<script setup lang="ts">
-import { useUserStore } from '@/store/modules/user'
-import { computed } from 'vue'
-import { useRouter } from 'vue-router'
+<script lang="ts">
+/**
+ * NConfigProvider 是ui库的适配主题的组件
+ * detail: https://www.naiveui.com/zh-CN/light/components/config-provider
+ */
+import { defineComponent, computed, provide, unref } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { zhCN, dateZhCN, darkTheme, GlobalThemeOverrides } from 'naive-ui'
+import { AppProvider } from '@/components/Application/'
+import { lighten } from '@/utils/'
+import { useProjectSettingStore } from '@/store/modules/projectSetting'
 
-const router = useRouter();
-const userStore = useUserStore();
-userStore.whoAmI();// 检查用户
+export default defineComponent({
+    components: {
+      AppProvider,
+    },
+    setup(){
+        const $route = useRoute();
+        const $router = useRouter();
+        const settingStore = useProjectSettingStore()
+        // 当前主题，如果设置为暗色主题，直接使用系统自带的暗色主题，否则就是亮色主题
+        const theme = computed(() => settingStore.themeSetting.isDark ? darkTheme : undefined)
+        /* 全局刷新 */
+        provide('reload', () => {
+          $router.push({ path: '/redirect' + unref($route).fullPath });
+        });
 
-const isLoading = computed(() => userStore.isLoading)
-const userdata = computed(() => userStore.data)
-
-const loginOut = () => {
-  userStore.loginOut()
-  router.push('/login')
-}
-
+        const themeOverrides = computed<GlobalThemeOverrides>(() => {
+            const { primary, success, waring, error, info } = settingStore.themeSetting;
+            const lightenStr = lighten(primary, 6);
+            return {
+                common: {
+                    primaryColor: primary,         // 主题色
+                    primaryColorHover: lightenStr,  // hover
+                    primaryColorPressed: lightenStr,
+                    successColor: success,
+                    warningColor: waring,
+                    infoColor: info,
+                    errorColor: error,
+                },
+                LoadingBar: {
+                    colorLoading: primary,// 加载效果的颜色
+                }
+            }
+        })
+        return {
+            zhCN,
+            dateZhCN,
+            theme,
+            themeOverrides,
+        }
+    }
+})
 </script>
-
-<style scoped lang="scss">
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
-}
-</style>

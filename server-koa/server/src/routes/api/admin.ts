@@ -76,11 +76,19 @@ router.post('/oauth/token', async (ctx: ParameterizedContext) => {
 
     if(isSucc){
         const result = await login(ctx.request.body);
-        const token = jwtPublish(ctx, { id: result.id });
-        ctx.body = getSuccess({ token });
+        if(!result){
+            ctx.body = getError('账号或密码错误', 414)
+        }else{
+            const token = jwtPublish(ctx, { id: result.id });
+            ctx.body = getSuccess({ token });
+        }
     }else{
         ctx.body = getError('登录失败', 1002);
     }
+})
+
+router.get('/loginInfo', async (ctx: ParameterizedContext) => {
+    console.log(ctx.state.userId)
 })
 
 export default router.routes()

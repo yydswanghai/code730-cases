@@ -1,24 +1,51 @@
 import { http } from './http'
-import { delay } from '@/utils/'
 
-/**
- * 登录
- */
-export async function login({ loginId, loginPwd }: { loginId: string, loginPwd: string }) {
-    await delay()
-    return await http.request({
+/* 登录 - 个人用户 */
+export function loginByU1(data: { loginId: string, loginPwd: string }) {
+    return http.request({
         method: 'post',
-        url: '/api/admin/login',
-        data: {
-            loginId,
-            loginPwd
-        }
+        url: '/admin/oauth/token',
+        params: { scope: 'app', type: '1' },
+        data,
     })
 }
-
-export async function whoAmI() {
-    return await http.request({
+/* 登录 - 组织用户 */
+export function loginByU2(data: { loginId: string, loginPwd: string }) {
+    return http.request({
+        method: 'post',
+        url: '/admin/oauth/token',
+        params: { scope: 'app', type: '2' },
+        data,
+    })
+}
+/* 登录 - 后台用户 */
+export function loginBySystem(data: { loginId: string, loginPwd: string }) {
+    return http.request({
+        method: 'post',
+        url: '/admin/oauth/token',
+        params: { scope: 'server' },
+        data,
+    })
+}
+/* 获取用户信息 */
+export function getUserInfo(params: { type: string }) {
+    return http.request({
         method: 'get',
-        url: '/api/admin/whoami'
+        url: '/admin/loginInfo',
+        params,
+    })
+}
+/* 获取用户菜单 */
+export function getUserMenu() {
+    return http.request({
+        method: 'get',
+        url: '/admin/menus',
+    })
+}
+/* 登出 */
+export function logout() {
+    return http.request({
+        method: 'delete',
+        url: '/admin/logout',
     })
 }

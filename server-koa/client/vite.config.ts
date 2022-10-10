@@ -3,6 +3,7 @@ import type { UserConfig, ConfigEnv } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
 import { resolve } from 'path'
+import svgLoader from 'vite-svg-loader'
 
 function pathResolve(dir: string) {
   return resolve(process.cwd(), '.', dir);
@@ -22,6 +23,14 @@ export default ({ command, mode }:ConfigEnv):UserConfig => {
         }
       ],
     },
+    css: {
+      preprocessorOptions: {
+        scss: {
+          additionalData: `@import "@/styles/var.scss";`,
+          charset: false
+        },
+      }
+    },
     server: {
       host: true,
       port: Number(env.VITE_PORT),
@@ -31,13 +40,14 @@ export default ({ command, mode }:ConfigEnv):UserConfig => {
         '/api': {
           target: env.VITE_API_URL,
           changeOrigin: true,
-          // rewrite: (path) => path.replace(/^\/api/, '')
+          rewrite: (path) => path.replace(/^\/api/, '/api')
         }
       }
     },
     plugins: [
       vue(),
       vueJsx(),
+      // svgLoader(),
     ]
   }
 }
