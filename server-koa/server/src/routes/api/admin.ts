@@ -12,8 +12,11 @@ const router = new Router({
 router.get('/whoami', async (ctx) => {
     const id: number = ctx.state.userId || -1;
     const result = await getAdminById(id)
-    if(result){
-        ctx.body = getSuccess(result);
+    if(result.length > 0){
+        const { id, loginId, StudentId } = result[0];
+        ctx.body = getSuccess({
+            ...result[0].Student
+        });
     }else{
         ctx.body = getError();
     }
@@ -60,7 +63,7 @@ router.post('/login4session', async (ctx: ParameterizedContext) => {
         ctx.body = getError('登录失败', 1002);
     }
 })
-
+// 分不同角色登录
 router.post('/oauth/token', async (ctx: ParameterizedContext) => {
     const { scope, type } = ctx.query;
     let isSucc = false;
@@ -88,7 +91,20 @@ router.post('/oauth/token', async (ctx: ParameterizedContext) => {
 })
 
 router.get('/loginInfo', async (ctx: ParameterizedContext) => {
-    console.log(ctx.state.userId)
+    const id: number = ctx.state.userId || -1;
+    const result = await getAdminById(id);
+    if(result.length > 0){
+        ctx.body = getSuccess({
+            info: { ...result[0].Student },
+            permissions: null
+        })
+    }else{
+        ctx.body = getError('找不到该用户', 1002);
+    }
+})
+
+router.delete('/logout', async (ctx: ParameterizedContext) => {
+    ctx.body = getSuccess(null)
 })
 
 export default router.routes()

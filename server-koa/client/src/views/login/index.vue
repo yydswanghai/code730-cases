@@ -40,7 +40,7 @@
                             </n-input>
                         </n-form-item>
                         <n-form-item path="loginPwd">
-                            <n-input v-model:value="formValue.loginPwd" type="loginPwd" placeholder="请输入密码" showPasswordOn="click">
+                            <n-input v-model:value="formValue.loginPwd" type="password" placeholder="请输入密码" showPasswordOn="click">
                                 <template #prefix>
                                     <n-icon size="18" color="#808695">
                                         <LockClosedOutline />
@@ -60,7 +60,7 @@
                         <n-form-item class="default-color">
                             <div class="flex justify-between">
                                 <div class="flex-initial">
-                                    <span>账号：admin，密码随便填</span>
+                                    <span>账号：admin，密码：admin</span>
                                 </div>
                             </div>
                         </n-form-item>
@@ -84,6 +84,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { useUserStore } from '@/store/modules/user'
 import { PersonOutline, LockClosedOutline } from '@vicons/ionicons5'
 import { userEnum } from '@/enums/userEnum'
+import md5 from 'md5'
 
 export default defineComponent({
     name: 'Login',
@@ -102,7 +103,7 @@ export default defineComponent({
         const formRef = ref<FormInst | null>(null)
         const formValue = reactive({
             loginId: 'admin',
-            loginPwd: '123456',
+            loginPwd: 'admin',
             isCaptcha: true,
         })
         const rules = {
@@ -117,18 +118,20 @@ export default defineComponent({
             { id: '003', name: userEnum.system, tab: '后台' }
         ]
         const defaultTab = computed({// 默认选择
-            get: () => userStore.user_type || '1',
-            set: (val) => userStore.setUserType(val as string)
+            get: () => userStore.user_type || userEnum.user1,
+            set: (val) => userStore.setUserType(val as userEnum)
         })
         function handleSubmit(e: MouseEvent) {
             e.preventDefault()
             formRef.value?.validate(async (errors) => {
                 if(!errors){
-                    const { loginId, loginPwd } = formValue
                     messageReactive = $message.loading('登录中...', { duration: 0 })
                     loading.value = true
                     try {
-                        const res = await userStore.login({ loginId, loginPwd })
+                        const res = await userStore.login({
+                            loginId: formValue.loginId,
+                            loginPwd: md5(formValue.loginPwd)
+                        }, defaultTab.value as userEnum)
                         if(res){
                             const path = decodeURIComponent($route.query?.redirect as string || '/');
                             $message.success('登录成功，即将进入系统');

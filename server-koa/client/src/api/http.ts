@@ -2,6 +2,8 @@ import axios from 'axios'
 import type { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
 import Qs from 'qs'
 import { statusCodeEnum } from '@/enums/statusCodeEnum'
+import { authEnum } from '@/enums/userEnum'
+import { getStorage, setStorage, delStorage } from '@/utils/auth'
 
 // 加载环境变量
 const { VITE_PROXY_PATH } = import.meta.env;
@@ -30,18 +32,20 @@ class RequestHttp {
          * 请求拦截
          */
         this.service.interceptors.request.use((config: AxiosRequestConfig) => {
+            let headers = config.headers;
             let data = config.data;
             if(config.method === 'post'){
                 // axios 自动修改请求头里的 content-type 为 application/x-www-form-urlencoded
                 data = Qs.stringify(data);
             }
-            // todo1. 发送请求的时候，如果有token，需要附带到请求头中
-            // const token = localStorage.getItem("token");
-            // if(token){
-            //     headers.authorization = `bearer ${token}`
-            // }
+            // 1. 发送请求的时候，如果有token，需要附带到请求头中
+            const token = getStorage(authEnum.ACCESS_TOKEN);
+            if(token){
+                headers!.authorization = `bearer ${token}`
+            }
             return {
                 ...config,
+                headers,
                 data
             }
         },error => {
@@ -51,15 +55,15 @@ class RequestHttp {
          * 响应拦截
          */
         this.service.interceptors.response.use((resp: AxiosResponse) => {
-            // todo2. 响应的时候，如果有token，保存token到客户端
+            // 2. 响应的时候，如果有token，保存token到客户端
             if (resp.headers.authorization) {
-                // localStorage.setItem("token", resp.headers.authorization);
+                setStorage(authEnum.ACCESS_TOKEN, resp.headers.authorization)
             }
             return resp.data;
         },error => {
-             // todo3. 响应的时候，如果响应的消息码是403（没有token，token失效），在本地删除token
+             // 3. 响应的时候，如果响应的消息码是403（没有token，token失效），在本地删除token
             if (error.response.status === statusCodeEnum.overdue) {
-                // localStorage.removeItem("token");
+                delStorage(authEnum.ACCESS_TOKEN)
                 const message = Reflect.get(window, '$message') || null
                 message && message.error(error.response.data?.msg);
             }

@@ -4,6 +4,8 @@
 import Admin, { AdminAttributes } from '../models/Admin'
 import md5 from 'md5'
 import { validators, async, validate } from 'validate.js'
+import Student from '../models/Student'
+
 
 // 添加，需要验证 loginId, loginPwd 是否合理，以及账号是否已存在
 export async function addAdmin({ loginId, loginPwd }: AdminAttributes) {
@@ -86,7 +88,6 @@ export async function login({ loginId, loginPwd }: AdminAttributes) {
         console.log(val)
         return null;
     }
-    loginPwd = md5(loginPwd);
     const result: any = await Admin.findOne({
         where: {
             loginId,
@@ -103,9 +104,12 @@ export async function login({ loginId, loginPwd }: AdminAttributes) {
 
 // 根据id查询
 export async function getAdminById(id: number) {
-    const result = await Admin.findByPk(id);
+    const result = await Admin.findAll({
+        where: { id },
+        include: [Student]
+    });
     if(result){
-        return result.toJSON();
+        return JSON.parse(JSON.stringify(result));
     }
     return null;
 }

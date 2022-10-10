@@ -108,7 +108,7 @@ export default defineComponent({
             ])
         }
         let vNode: any = null
-        let username = userStore.user_info?.username || '';
+        let username = userStore.user_info?.name || '';
         if(userStore.user_type == userEnum.system){
             avatar.value = Avatar3;
             vNode = renderCustomHeader('后台用户', username);

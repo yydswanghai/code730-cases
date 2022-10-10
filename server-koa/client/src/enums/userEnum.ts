@@ -7,6 +7,5 @@ export enum userEnum {
 
 export enum authEnum {
     ACCESS_TOKEN = 'KOA_CLIENT_ACCESS_TOKEN',
-    REFRESH_TOKEN = 'KOA_CLIENT_REFRESH_TOKEN',
     USER_TYPE = 'KOA_CLIENT_USER_TYPE'
 }
