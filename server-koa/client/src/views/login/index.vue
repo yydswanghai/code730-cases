@@ -118,9 +118,12 @@ export default defineComponent({
             { id: '003', name: userEnum.system, tab: '后台' }
         ]
         const defaultTab = computed({// 默认选择
-            get: () => userStore.user_type || userEnum.user1,
+            get: () => userStore.user_type,
             set: (val) => userStore.setUserType(val as userEnum)
         })
+        if(!defaultTab.value){// 先默认设置为用户类型1，保证只要登录过后，一定有值
+            userStore.setUserType(userEnum.user1)
+        }
         function handleSubmit(e: MouseEvent) {
             e.preventDefault()
             formRef.value?.validate(async (errors) => {

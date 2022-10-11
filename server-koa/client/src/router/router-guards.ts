@@ -60,7 +60,8 @@ export function createRouterGuards(router: Router){
             }
         }
         next();
-    });
+    })
+
     router.afterEach((to, _, failure) => {
         // 设置标题
         document.title = to?.meta?.title as string || document.title;
@@ -81,7 +82,7 @@ export function createRouterGuards(router: Router){
         asyncRouteStore.setKeepAliveComponents(keepAliveComponents)
         const Loading = Reflect.get(window, '$loading') || null;
         Loading && Loading.finish()
-    });
+    })
 
     router.onError((error) => {
         console.log(error, '路由错误')

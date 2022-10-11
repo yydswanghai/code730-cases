@@ -9,3 +9,8 @@ declare module '*.vue' {
 }
 
 declare type Recordable<T = any> = Record<string, T>
+
+declare interface Window {
+  $message: any
+  $dialog: any
+}

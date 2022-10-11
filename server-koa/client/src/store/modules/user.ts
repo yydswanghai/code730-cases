@@ -1,7 +1,6 @@
 import { defineStore } from 'pinia'
 import { authEnum, userEnum } from '@/enums/userEnum'
 import { getStorage, setStorage, delStorage } from '@/utils/auth'
-import { useMessage } from 'naive-ui'
 import { login, getUserInfo, logout } from '@/api/user'
 import { useTagsViewStore } from './tagsView'
 import { statusCodeEnum } from '@/enums/statusCodeEnum'
@@ -28,11 +27,6 @@ export const useUserStore = defineStore({
         user_info: null,
         permissions: null,
     }),
-    getters: {
-        $message(){// 弹窗提示
-            return useMessage()
-        }
-    },
     actions: {
         setUserType(type: userEnum){// 设置用户类型
             this.user_type = type;
@@ -50,7 +44,7 @@ export const useUserStore = defineStore({
                 if(resp.code === statusCodeEnum.success){
                     return true;// 这里返回数据方便登录的时候判断状态
                 }else{
-                    this.$message.error(resp.msg || '登录失败');
+                    window.$message.error(resp.msg || '登录失败')
                     return false;
                 }
             } catch(error){
@@ -59,20 +53,14 @@ export const useUserStore = defineStore({
         },
         async getInfo(){// 获取用户信息
             try {
-                let type = userEnum.user1;
-                if(this.user_type === userEnum.system){
-                    type = userEnum.system;
-                }else if(this.user_type === userEnum.user2){
-                    type = userEnum.user2;
-                }
-                const resp = await getUserInfo({ type });
+                const resp = await getUserInfo({ type: this.user_type! });
                 if(resp.code === statusCodeEnum.success){
                     const { info, permissions } = resp.data;
                     this.setUserInfo(info);
                     this.setPermissions(permissions);
                     return { info, permissions }
                 }else{
-                    this.$message.error(resp.msg || '获取用户信息失败');
+                    window.$message.error(resp.msg || '获取用户信息失败')
                     return {}
                 }
             } catch (error) {
