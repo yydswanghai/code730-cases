@@ -12,7 +12,7 @@ type IUserInfo = {
 }
 
 export type IState = {
-    user_type: string | undefined
+    user_type: userEnum | undefined
     user_info: IUserInfo | null
     permissions: string[] | null
 }
@@ -23,7 +23,7 @@ export type IState = {
 export const useUserStore = defineStore({
     id: 'app-user',
     state: (): IState => ({
-        user_type: getStorage(authEnum.USER_TYPE),
+        user_type: getStorage(authEnum.USER_TYPE) as userEnum | undefined,
         user_info: null,
         permissions: null,
     }),

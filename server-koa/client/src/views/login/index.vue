@@ -124,6 +124,9 @@ export default defineComponent({
         if(!defaultTab.value){// 先默认设置为用户类型1，保证只要登录过后，一定有值
             userStore.setUserType(userEnum.user1)
         }
+        function handleUpdateTab(tabName: userEnum) {
+            defaultTab.value = tabName;
+        }
         function handleSubmit(e: MouseEvent) {
             e.preventDefault()
             formRef.value?.validate(async (errors) => {
@@ -134,7 +137,7 @@ export default defineComponent({
                         const res = await userStore.login({
                             loginId: formValue.loginId,
                             loginPwd: md5(formValue.loginPwd)
-                        }, defaultTab.value as userEnum)
+                        }, defaultTab.value!)
                         if(res){
                             const path = decodeURIComponent($route.query?.redirect as string || '/');
                             $message.success('登录成功，即将进入系统');
@@ -151,9 +154,7 @@ export default defineComponent({
                 }
             })
         }
-        function handleUpdateTab(tabName: string) {
-            defaultTab.value = tabName;
-        }
+
         return {
             userEnum,
             siteTitle,
