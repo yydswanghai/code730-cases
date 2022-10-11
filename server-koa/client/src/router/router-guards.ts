@@ -12,10 +12,10 @@ import { ErrorPageRoute } from '@/router/base'
 const whiteList: string[] = [PageEnum.LOGIN]// 白名单
 
 export function createRouterGuards(router: Router){
-    const asyncRouteStore = useAsyncRouteStore()
-    const userStore = useUserStore()
 
     router.beforeEach(async (to, from, next) => {
+        const asyncRouteStore = useAsyncRouteStore()
+        const userStore = useUserStore()
         const Loading = Reflect.get(window, '$loading') || null;
         // 开始进度条
         Loading && Loading.start();
@@ -63,6 +63,7 @@ export function createRouterGuards(router: Router){
     })
 
     router.afterEach((to, _, failure) => {
+        const asyncRouteStore = useAsyncRouteStore()
         // 设置标题
         document.title = to?.meta?.title as string || document.title;
         // 在这里设置需要缓存的组件名称

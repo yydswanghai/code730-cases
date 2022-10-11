@@ -1,6 +1,5 @@
 import { defineStore } from 'pinia'
 import { toRaw } from 'vue'
-import { useMessage } from 'naive-ui'
 import { constantRouter, asyncRouter } from '@/router'
 import { IRouteRecordRaw } from '@/router/types'
 import { PageEnum } from '@/enums/pageEnum'
@@ -32,9 +31,6 @@ export const useAsyncRouteStore = defineStore({
         getUserStore(){// 用户状态
             return useUserStore()
         },
-        $message(){// 弹窗提示
-            return useMessage()
-        }
     },
     actions: {
         setRoutes(routers: IRouteRecordRaw[]){// 设置路由
@@ -88,8 +84,7 @@ async function fetchMenu(){
         asyncImportRoute(routerList);
         return routerList;
     }else{
-        const message = Reflect.get(window, '$message') || null
-        message && message.error(resp.msg);
+        window.$message.error(resp.msg || '请求获取菜单失败');
         return [];
     }
 }

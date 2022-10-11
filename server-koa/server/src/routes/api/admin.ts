@@ -13,7 +13,6 @@ router.get('/whoami', async (ctx) => {
     const id: number = ctx.state.userId || -1;
     const result = await getAdminById(id)
     if(result.length > 0){
-        const { id, loginId, StudentId } = result[0];
         ctx.body = getSuccess({
             ...result[0].Student
         });

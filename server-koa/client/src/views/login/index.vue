@@ -51,16 +51,16 @@
                         <n-form-item class="default-color" style="display: flex;">
                             <n-checkbox v-model:checked="autoLogin">自动登录</n-checkbox>
                         </n-form-item>
-                        <n-form-item class="default-color" style="display: flex;" v-if="defaultTab != userEnum.system">
+                        <n-form-item class="default-color" style="display: flex;">
                             <div style="display: flex;justify-content: space-between;width: 100%;">
                                 <a href="javascript:">忘记密码</a>
-                                <a href="javascript:">注册</a>
+                                <a href="javascript:" v-if="defaultTab != userEnum.system">注册</a>
                             </div>
                         </n-form-item>
                         <n-form-item class="default-color">
                             <div class="flex justify-between">
                                 <div class="flex-initial">
-                                    <span>账号：admin，密码：admin</span>
+                                    <span>账号：{{ formValue.loginId }}，密码：{{ formValue.loginPwd }}</span>
                                 </div>
                             </div>
                         </n-form-item>
@@ -102,8 +102,8 @@ export default defineComponent({
         const siteTitle = VITE_APP_TITLE || '';
         const formRef = ref<FormInst | null>(null)
         const formValue = reactive({
-            loginId: 'admin',
-            loginPwd: 'admin',
+            loginId: '',
+            loginPwd: '',
             isCaptcha: true,
         })
         const rules = {
@@ -124,8 +124,23 @@ export default defineComponent({
         if(!defaultTab.value){// 先默认设置为用户类型1，保证只要登录过后，一定有值
             userStore.setUserType(userEnum.user1)
         }
+        function setFormValue() {
+            if(defaultTab.value === userEnum.user2){
+                formValue.loginId = 'qwe'
+                formValue.loginPwd = '123123'
+            }else if(defaultTab.value === userEnum.system){
+                formValue.loginId = 'admin'
+                formValue.loginPwd = 'admin'
+            }
+            else{
+                formValue.loginId = 'abc'
+                formValue.loginPwd = '123123'
+            }
+        }
+        setFormValue();
         function handleUpdateTab(tabName: userEnum) {
             defaultTab.value = tabName;
+            setFormValue();
         }
         function handleSubmit(e: MouseEvent) {
             e.preventDefault()

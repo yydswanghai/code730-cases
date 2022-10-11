@@ -28,7 +28,7 @@ const CONFIG = {
 app.use(session(CONFIG, app))
 app.use(corsMid)
 app.use(koaBody())// 处理请求
-app.use(proxyMid)
+// app.use(proxyMid)
 app.use(apiLogMid)
 app.use(tokenMid)
 app.use(historyApiFallback({
