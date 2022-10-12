@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { authEnum, userEnum } from '@/enums/userEnum'
-import { getStorage, setStorage, delStorage } from '@/utils/auth'
+import { getCookie, setCookie, delCookie } from '@/utils/auth'
 import { login, getUserInfo, logout } from '@/api/user'
 import { useTagsViewStore } from './tagsView'
 import { statusCodeEnum } from '@/enums/statusCodeEnum'
@@ -23,14 +23,14 @@ export type IState = {
 export const useUserStore = defineStore({
     id: 'app-user',
     state: (): IState => ({
-        user_type: getStorage(authEnum.USER_TYPE) as userEnum | undefined,
+        user_type: getCookie(authEnum.USER_TYPE) as userEnum | undefined,
         user_info: null,
         permissions: null,
     }),
     actions: {
         setUserType(type: userEnum){// 设置用户类型
             this.user_type = type;
-            setStorage(authEnum.USER_TYPE, type);
+            setCookie(authEnum.USER_TYPE, type);
         },
         setPermissions(perm: string[] | null) {// 设置用户权限
             this.permissions = perm;
@@ -69,7 +69,7 @@ export const useUserStore = defineStore({
         },
         async logout(){// 登出
             await logout()
-            delStorage(authEnum.ACCESS_TOKEN)
+            delCookie(authEnum.ACCESS_TOKEN)
             this.setUserInfo(null);
             this.setPermissions(null);
             // 清除tags-views

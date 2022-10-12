@@ -3,8 +3,7 @@ import { useUserStore } from '@/store/modules/user'
 import { Router } from 'vue-router'
 import { PageEnum } from '@/enums/pageEnum'
 import { authEnum } from '@/enums/userEnum'
-import { getStorage } from '@/utils/auth'
-import { ErrorPageRoute } from '@/router/base'
+import { getCookie } from '@/utils/auth'
 
 /**
  * 路由守卫
@@ -13,27 +12,24 @@ const whiteList: string[] = [PageEnum.LOGIN]// 白名单
 
 export function createRouterGuards(router: Router){
 
-    router.beforeEach(async (to, from, next) => {
+    router.beforeEach(async (to, from) => {
         const asyncRouteStore = useAsyncRouteStore()
         const userStore = useUserStore()
         const Loading = Reflect.get(window, '$loading') || null;
         // 开始进度条
         Loading && Loading.start();
-        const hasToken = getStorage(authEnum.ACCESS_TOKEN);
+        const hasToken = getCookie(authEnum.ACCESS_TOKEN);
         if(!hasToken){// 没有token
             // 不在白名单中
             if(!whiteList.includes(to.path)){
-                next(`${PageEnum.LOGIN}?redirect=${to.path}`);
-                return;
+                return `${PageEnum.LOGIN}?redirect=${to.path}`;
             }else{
-                next();
                 return;
             }
         }
         if(to.path === PageEnum.LOGIN){
             // 如果已登录，则重定向到主页
-            next({ path: '/' });
-            return;
+            return { path: '/' };
         }
         const hasInfo = userStore.user_info;
         if(!hasInfo){// 有token，但没有用户信息
@@ -44,22 +40,14 @@ export function createRouterGuards(router: Router){
                 routes.forEach(item => {
                     router.addRoute(item as any)
                 });
-                // 添加404
-                const isErrorPage = router.getRoutes().findIndex(it => it.name === PageEnum.ERROR_NAME);
-                if(isErrorPage === -1){
-                    router.addRoute(ErrorPageRoute as any);
-                }
-                next({ ...to, replace: true });
-                return;
+                return to.fullPath;
             } catch (error) {
-                console.log(error)
                 // 获取用户信息出错
                 await userStore.logout();
-                next(`${PageEnum.LOGIN}?redirect=${to.path}`);
-                return;
+                return `${PageEnum.LOGIN}?redirect=${to.path}`;
             }
         }
-        next();
+        return;
     })
 
     router.afterEach((to, _, failure) => {

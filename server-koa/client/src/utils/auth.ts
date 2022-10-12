@@ -1,13 +1,13 @@
 import Cookies from 'js-cookie'
 
-export function getStorage(key: string){
+export function getCookie(key: string){
     return Cookies.get(key)
 }
 
-export function setStorage(key: string, value: any){
+export function setCookie(key: string, value: any){
     return Cookies.set(key, value)
 }
 
-export function delStorage(key: string){
+export function delCookie(key: string){
     return Cookies.remove(key)
 }

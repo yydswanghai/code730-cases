@@ -1,7 +1,7 @@
 import { IRouteRecordRaw } from './types'
 import { createRouter, createWebHistory } from 'vue-router'
 import type { RouteRecordRaw } from 'vue-router'
-import { RootRoute, DashboardRoute, RedirectRoute, LoginRoute } from '@/router/base'
+import { RootRoute, DashboardRoute, RedirectRoute, LoginRoute, ErrorPageRoute} from '@/router/base'
 import { isExternal } from '@/utils/'
 
 /* 加载modules目录下的所有文件 */
@@ -25,7 +25,7 @@ function sortRoute(a: IRouteRecordRaw, b: IRouteRecordRaw) {
 routeModuleList.sort(sortRoute);
 
 // 固定的路由 无需验证权限
-export const constantRouter = [RootRoute, DashboardRoute, RedirectRoute, LoginRoute];
+export const constantRouter = [RootRoute, DashboardRoute, RedirectRoute, LoginRoute, ErrorPageRoute];
 
 // 用户端写死的路由，如果不是通过后端请求到的，则就使用这个路由
 export const asyncRouter = [...routeModuleList];

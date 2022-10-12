@@ -3,7 +3,7 @@ import type { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
 import Qs from 'qs'
 import { statusCodeEnum } from '@/enums/statusCodeEnum'
 import { authEnum } from '@/enums/userEnum'
-import { getStorage, setStorage, delStorage } from '@/utils/auth'
+import { getCookie, setCookie, delCookie } from '@/utils/auth'
 
 // 加载环境变量
 const { VITE_PROXY_PATH } = import.meta.env;
@@ -39,7 +39,7 @@ class RequestHttp {
                 data = Qs.stringify(data);
             }
             // 1. 发送请求的时候，如果有token，需要附带到请求头中
-            const token = getStorage(authEnum.ACCESS_TOKEN);
+            const token = getCookie(authEnum.ACCESS_TOKEN);
             if(token){
                 headers!.authorization = `bearer ${token}`
             }
@@ -57,13 +57,13 @@ class RequestHttp {
         this.service.interceptors.response.use((resp: AxiosResponse) => {
             // 2. 响应的时候，如果有token，保存token到客户端
             if (resp.headers.authorization) {
-                setStorage(authEnum.ACCESS_TOKEN, resp.headers.authorization)
+                setCookie(authEnum.ACCESS_TOKEN, resp.headers.authorization)
             }
             return resp.data;
         },error => {
              // 3. 响应的时候，如果响应的消息码是403（没有token，token失效），在本地删除token
             if (error.response.status === statusCodeEnum.overdue) {
-                delStorage(authEnum.ACCESS_TOKEN)
+                delCookie(authEnum.ACCESS_TOKEN)
                 const message = Reflect.get(window, '$message') || null
                 message && message.error(error.response.data?.msg);
             }
