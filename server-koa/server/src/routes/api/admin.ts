@@ -1,6 +1,7 @@
 import Router from '@koa/router'
 import { ParameterizedContext } from 'koa'
 import { login, getAdminById } from '../../services/adminService'
+import { getMenus } from '../../services/menusService'
 import { getSuccess, getError } from '../getSendResult'
 import { encrypt } from '../../utils/crypt'
 import { jwtPublish } from '../middleware/jwt'
@@ -62,6 +63,7 @@ router.post('/login4session', async (ctx: ParameterizedContext) => {
         ctx.body = getError('登录失败', 1002);
     }
 })
+
 // 分不同角色登录
 router.post('/oauth/token', async (ctx: ParameterizedContext) => {
     const { scope, type } = ctx.query;
@@ -89,6 +91,7 @@ router.post('/oauth/token', async (ctx: ParameterizedContext) => {
     }
 })
 
+// 获取用户信息
 router.get('/loginInfo', async (ctx: ParameterizedContext) => {
     const id: number = ctx.state.userId || -1;
     const result = await getAdminById(id);
@@ -102,8 +105,14 @@ router.get('/loginInfo', async (ctx: ParameterizedContext) => {
     }
 })
 
+// 登出
 router.delete('/logout', async (ctx: ParameterizedContext) => {
     ctx.body = getSuccess(null)
+})
+
+// 获取菜单
+router.get('/menus', async (ctx: ParameterizedContext) => {
+    ctx.body = getSuccess(await getMenus())
 })
 
 export default router.routes()

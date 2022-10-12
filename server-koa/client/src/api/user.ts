@@ -40,9 +40,3 @@ export function logout() {
         url: '/admin/logout',
     })
 }
-export function whoami() {
-    return http.request({
-        method: 'get',
-        url: '/admin/whoami',
-    })
-}

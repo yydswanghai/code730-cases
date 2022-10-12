@@ -6,6 +6,7 @@ import './Admin'
 import './Class'
 import './Student'
 import './Book'
+import './Menus'
 
 // 同步所有模型
 sequelize.sync({ alter: true }).then(() => {

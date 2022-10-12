@@ -58,7 +58,7 @@ export const useAsyncRouteStore = defineStore({
             const permissionsList: string[] = data.permissions || [];// 权限列表
             if(this.getUserStore.user_type == userEnum.system){
                 const menus = await fetchMenu();
-                if(menus.length){
+                if(menus?.length){
                     accessedRouters = menus;
                 }
             }else{
@@ -77,98 +77,117 @@ export const useAsyncRouteStore = defineStore({
  * 请求接口获取菜单
  */
 async function fetchMenu(){
-    const resp = await getUserMenu();
-    if(resp.code === statusCodeEnum.success){
-        const routerMap = addChildrenRouter(resp.data);
-        const routerList = generator(routerMap);
-        asyncImportRoute(routerList);
-        return routerList;
-    }else{
-        window.$message.error(resp.msg || '请求获取菜单失败');
-        return [];
+    try {
+        const resp = await getUserMenu();
+        if(resp.code === statusCodeEnum.success){
+            const routerList = formatRouter(resp.data)
+            const routerTree = convert(routerList)
+            const routerMap = addSelf(routerTree)
+            asyncImportRoute(routerMap);
+            return routerMap;
+        }else{
+            window.$message.error(resp.msg || '请求获取菜单失败');
+            return [];
+        }
+    } catch (error) {
+        window.$message.error('请求获取菜单发生了错误');
     }
 }
 /**
- * 1. 添加子路由（一级路由都是渲染Layout组件，但是它一般还需要一个子路由来显示中心视图）
- * 则生成一个一级路由的镜像子路由，但是如下属性不同：
- * path=''
- * name=name+'Index'
- * component=path+'/index'
+ * 1. 格式化接口数据
  */
-function addChildrenRouter(resData: any[]) {
-    return resData.map(it => {
-        const { path, name, id, parentId, permission, sortOrder, type, meta } = it;
-        if(isExternal(it.path)){// 外部链接
-            it.path = `/${path}`;
-        }
-        if(parentId === '-1' && !it.children){
-            it.children = [];
-            it.children.unshift({
-                id,
-                path: '',
-                name: `${name}Index`,
-                parentId,
-                component: `${path}/index`,
-                permission,
-                sortOrder,
-                type,
-                meta,
-            });
-        }
-        return it;
-    })
-}
-/**
- * 2. 生成router对象
- */
-function generator(routers: any[]): IRouteRecordRaw[] {
-    return routers.map(it => {
-        const { path, name, component, meta, redirect } = it;
-        // 处理icon
+function formatRouter(resData: any[]) {
+    return resData.map(item => {
         let icon = null;
-        if(meta.icon){
+        if(item.meta_icon){// 处理icon
             // 如果icons目录下能找到这个icon名的组件就返回，否则返回null
-            const iconComponent = renderIcon(($icons as any)[meta.icon as string]);
+            const iconComponent = renderIcon(($icons as any)[item.meta_icon]);
             if(Boolean(iconComponent)){
                 icon = iconComponent;
             }
         }
-        const routerInfo = {
-            path,
-            name,
-            component,
-            redirect,
-            meta: {
-                ...meta,
-                icon,
-                keepAlive: meta.keepAlive === '1',
-                alwaysShow: meta.alwaysShow === '1',
-                hidden: meta.hidden === '1',
-                affix: meta.affix === '1'
-            }
+        const meta = {// 处理meta
+            title: item.meta_title,
+            icon: icon,
+            sort: item.meta_sort,
+            hidden: item.meta_hidden,
+            keepAlive: item.meta_keep_alive,
+            alwaysShow: item.meta_always_show,
+            affix: item.meta_affix
         }
-        if(it.children && it.children.length){
-            Reflect.set(routerInfo, 'children', generator(it.children));
+        const routerInfo = {
+            id: item.id,
+            parent_id: item.parent_id,
+            path: isExternal(item.path) ? `/${item.path}` : item.path,// 外部链接
+            name: item.name,
+            permission: item.permission,
+            type: item.type,
+            meta,
+            component: item.component,
+            children: []
         }
         return routerInfo;
     })
 }
 /**
- * 3. 查找views中对应的组件文件
+ * 2. 将一维数组转换成树形数组
  */
+function convert(list: any[]) {
+    const newList = []
+    const map = list.reduce((pre, cur) => {
+        pre[cur.id] = cur
+        return pre
+    }, {})
+    for (const item of list) {
+        if(item.parent_id === '-1'){
+            newList.push(item)
+            continue
+        }
+        if(item.parent_id in map){
+            const parent = map[item.parent_id]
+            parent.children = parent.children || []
+            parent.children.push(item)
+        }
+    }
+    return newList
+}
+/**
+ * 3. 给parent_id为-1并且没有子路由，用于显示自己本身
+ */
+function addSelf(list: any[]): IRouteRecordRaw[] {
+    return list.map(item => {
+        if(item.parent_id === '-1' && item.children.length === 0){
+            item.children = item.children || []
+            item.children.push({
+                id: Number(`${item.id}10`),
+                parent_id: item.id,
+                path: '',
+                name: `${item.name}Index`,
+                component: `${item.path}/index`,
+                permission: item.permission,
+                type: item.type,
+                meta: item.meta,
+            })
+        }
+        return item;
+    })
+}
+/**
+ * 4. 查找views中对应的组件文件
+ */
+const viewsModules: Record<string, any> = import.meta.glob('@/views/menus/**/*.{vue,tsx}', { eager: true });
 function asyncImportRoute(routers: IRouteRecordRaw[]) {
     if (!routers) return
-    let viewsModules: Record<string, any> = import.meta.glob('@/views/menus/**/*.{vue,tsx}', { eager: true });
-    routers.forEach(it => {
-        const { component, children } = it;
+    routers.forEach(item => {
+        const { component, children } = item;
         if(component){
             if(component === 'LAYOUT'){
-                it.component = Layout;
+                item.component = Layout;
             }else{
-                it.component = dynamicImport(viewsModules, component as string);
+                item.component = dynamicImport(viewsModules, component as string);
             }
         }
-        children && asyncImportRoute(children)
+        children?.length && asyncImportRoute(children)
     })
 }
 /**
