@@ -6,11 +6,15 @@ import { getSuccess, getError } from '../getSendResult'
 import { encrypt } from '../../utils/crypt'
 import { jwtPublish } from '../middleware/jwt'
 
+/**
+ * 用户/管理员
+ */
+
 const router = new Router({
     prefix: '/api/admin'
 })
 
-router.get('/whoami', async (ctx) => {
+router.get('/whoami', async (ctx: ParameterizedContext) => {
     const id: number = ctx.state.userId || -1;
     const result = await getAdminById(id)
     if(result.length > 0){

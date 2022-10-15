@@ -1,7 +1,7 @@
 node_modules/
 dist/
 logs/
-
+public/upload/*
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

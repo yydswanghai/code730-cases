@@ -1,6 +1,5 @@
 import axios from 'axios'
 import type { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
-import Qs from 'qs'
 import { statusCodeEnum } from '@/enums/statusCodeEnum'
 import { authEnum } from '@/enums/userEnum'
 import { getCookie, setCookie, delCookie } from '@/utils/auth'
@@ -33,11 +32,6 @@ class RequestHttp {
          */
         this.service.interceptors.request.use((config: AxiosRequestConfig) => {
             let headers = config.headers;
-            let data = config.data;
-            if(config.method === 'post'){
-                // axios 自动修改请求头里的 content-type 为 application/x-www-form-urlencoded
-                data = Qs.stringify(data);
-            }
             // 1. 发送请求的时候，如果有token，需要附带到请求头中
             const token = getCookie(authEnum.ACCESS_TOKEN);
             if(token){
@@ -46,7 +40,6 @@ class RequestHttp {
             return {
                 ...config,
                 headers,
-                data
             }
         },error => {
             return Promise.reject(error);

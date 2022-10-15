@@ -1,6 +1,6 @@
 import { http } from './http'
 import { userEnum } from '@/enums/userEnum'
-
+import Qs from 'Qs'
 /* 登录 */
 export function login(data: { loginId: string, loginPwd: string }, type: userEnum) {
     let params = {};
@@ -11,11 +11,12 @@ export function login(data: { loginId: string, loginPwd: string }, type: userEnu
     }else if(type === userEnum.system){// 后台用户
         params = { scope: 'server' }
     }
+    // axios 自动修改请求头里的 content-type 为 application/x-www-form-urlencoded
     return http.request({
         method: 'post',
         url: '/admin/oauth/token',
         params,
-        data,
+        data: Qs.stringify(data),
     })
 }
 /* 获取用户信息 */

@@ -11,6 +11,9 @@ import corsMid from './middleware/cors'
 import proxyMid from './middleware/proxy'
 import apiLogMid from './middleware/apiLog'
 import adminRouter from './api/admin'
+import uploadRouter from './api/upload'
+import multer from 'multer'
+import { getError } from './getSendResult'
 
 const app = new Koa();
 const server = http.createServer(app.callback());
@@ -46,9 +49,15 @@ app.use(koaStatic(
 ))
 
 app.use(adminRouter)
+app.use(uploadRouter)
 
-app.on('error', err => {
-    console.error(err);
+app.on('error', (err, ctx) => {
+    ctx.response.status = err.statusCode
+    ctx.body = {
+        code: err.code,
+        msg: err.message || err.msg,
+        request: ctx.method + ' >> ' + ctx.url
+    }
 })
 
 server.listen(9525, () => console.log('server listening 9525'))
