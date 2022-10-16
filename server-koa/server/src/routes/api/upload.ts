@@ -1,5 +1,5 @@
 import Router from '@koa/router'
-import { ParameterizedContext } from 'koa'
+import { Next, ParameterizedContext } from 'koa'
 import multer from '@koa/multer'
 import { resolve, extname } from 'path'
 import { getSuccess, getError } from '../getSendResult'
@@ -42,9 +42,17 @@ const upload = multer({
     }
 });
 
-router.post('/upload', upload.single('image') ,async(ctx: ParameterizedContext) => {
-    const url= `http://localhost:9525/upload/${ctx.file.filename}`
-    ctx.body = getSuccess({ url })
+router.post('/upload', async (ctx: ParameterizedContext, next: Next) => {
+    const err = await upload.single('image')(ctx, next)
+                .then(res => res)
+                .catch(err => err)
+
+    if(err){
+        ctx.body = getError('上传文件出错', 1004)
+    }else{
+        const url= `http://localhost:9525/upload/${ctx.file.filename}`
+        ctx.body = getSuccess({ url })
+    }
 })
 
 export default router.routes()

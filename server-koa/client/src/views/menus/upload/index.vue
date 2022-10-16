@@ -1,6 +1,6 @@
 <template>
     <div class="upload-index">
-        <Single />
+        <Single fileListJustifyContent="center" />
     </div>
 </template>
 
@@ -21,6 +21,7 @@ export default defineComponent({
 </script>
 <style lang="scss" scoped>
 .upload-index{
-    
+    width: 100%;
+    padding: 100px 0 0;
 }
 </style>
