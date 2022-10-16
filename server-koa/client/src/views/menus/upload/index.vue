@@ -1,5 +1,5 @@
 <template>
-    <div class="upload-index">
+    <div class="upload-container">
         <Single fileListJustifyContent="center" />
     </div>
 </template>
@@ -20,8 +20,12 @@ export default defineComponent({
 })
 </script>
 <style lang="scss" scoped>
-.upload-index{
+.upload-container{
     width: 100%;
-    padding: 100px 0 0;
+    height: calc(100vh - 108px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #eee;
 }
 </style>
