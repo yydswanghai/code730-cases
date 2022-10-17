@@ -1,14 +1,10 @@
 <template>
     <n-upload
-        class="upload-single"
+        class="upload-multiple"
         list-type="image-card"
-        v-model:file-list="fileList"
-        :custom-request="customRequest"
-        @before-upload="beforeUpload"
-        @preview="preview"
-        @finish="finish"
-        @error="error"
-        @remove="remove"
+        :default-upload="false"
+        multiple
+        @change="change"
         >
             <slot>
                 <div class="upload-default">
@@ -17,31 +13,34 @@
                 </div>
             </slot>
     </n-upload>
+    <div style="text-align: center;margin-top: 10px;">
+        <n-button type="primary" :disabled="!fileList.length" @click="handleClick">上传文件</n-button>
+        <n-button type="success" style="margin-left: 6px;" @click="preview">预览已经上传的文件</n-button>
+    </div>
     <!-- 预览 -->
     <n-modal
         v-model:show="showModal"
         preset="card"
-        style="width: 600px"
+        style="width: 400px"
         title="图片预览"
         >
-        <img :src="previewImageUrl" />
+        <n-carousel show-arrow autoplay draggable>
+            <img v-for="(item, idx) in previewImages" :key="idx" :src="item.url" />
+        </n-carousel>
     </n-modal>
 </template>
 
 <script lang="ts">
 /**
- * 单个文件上传
+ * 多文件上传
  */
 import { defineComponent, ref, computed } from "vue"
 import { UploadOutline } from '@/icons'
 import { useMessage } from 'naive-ui'
-import type { UploadCustomRequestOptions, UploadFileInfo} from 'naive-ui'
-import { upload } from "@/api/upload"
+import type { UploadFileInfo } from 'naive-ui'
+import { uploadMultiple } from "@/api/upload"
 import { statusCodeEnum } from '@/enums/statusCodeEnum'
 
-interface uploadResponse {// 文件上传返回结果对象
-    url: string
-}
 export default defineComponent({
     emits: ['success', 'remove'],
     props: {
@@ -65,74 +64,50 @@ export default defineComponent({
         const $message = useMessage();
         const fileList = ref<UploadFileInfo[]>([]);// 文件列表
         const showModal = ref(false);// 预览弹窗控制
-        const previewImageUrl = ref('');// 预览大图
+        const previewImages = ref<any[]>([]);// 预览大图
 
-        /* 自定义上传 */
-        async function customRequest(options: UploadCustomRequestOptions) {
-            const { file } = options;
+        /* 文件发生改变 */
+        function change(options: { fileList: UploadFileInfo[] }) {
+            fileList.value = options.fileList;
+        }
+        /* 点击上传 */
+        async function handleClick() {
             const formData = new FormData();
-            if(file?.file){
-                formData.append('image-single', file.file, file.name)
+            if(fileList.value.length > 0){
+                fileList.value.forEach(item => {
+                    formData.append('image-multiple', item.file!, item.name)
+                })
             }
-            const resp = await upload(formData);
+            const resp = await uploadMultiple(formData);
             if(resp.code === statusCodeEnum.success){
-                const url = resp.data.url;
-                previewImageUrl.value = url
-                options.onFinish();
-                $message.success('上传成功');
+                resp.data.forEach((item: any) => {
+                    previewImages.value.push(item)
+                })
+                $message.success('上传成功')
             }else{
-                options.onError();
                 $message.error('上传失败');
             }
-        }
-        /* 上传之前 */
-        function beforeUpload(options: {file: UploadFileInfo, fileList: UploadFileInfo[]}): any {
-            const accepts = ["image/jpg", "image/jpeg", "image/png", "image/gif", "image/webp"];// 文件类型
-            if(!accepts.includes(options.file.type!)){
-                $message.error('上传的文件格式不正确！');
-                return false;
-            }
-        }
-        /* 上传完成 */
-        function finish(options: {file: UploadFileInfo, event?: ProgressEvent}): any {
-            // 上传证件照只需要一张，删除前一张
-            fileList.value.length > 1 && fileList.value.splice(0, 1);
-            ctx.emit('success', fileList.value)
-        }
-        /* 上传失败 */
-        function error(options: {file: UploadFileInfo, event?: ProgressEvent}): any {
-            console.log(123);
         }
         /* 预览文件 */
         function preview(file: UploadFileInfo) {
             showModal.value = true;
         }
-        /* 删除图片 */
-        function remove(options: {file: UploadFileInfo, fileList: UploadFileInfo[]}) {
-            const { file } = options;
-            const index = fileList.value.findIndex(it => it.id === file.id);
-            fileList.value.splice(index, 1);
-            ctx.emit('remove');
-        }
 
         return {
             fileList,
             showModal,
-            previewImageUrl,
+            previewImages,
             width: computed(() => props.triggerWidth + 'px'),
             height: computed(() => props.triggerHeight + 'px'),
-            customRequest,
-            beforeUpload,
+            change,
             preview,
-            finish,
-            remove,
-            error
+            handleClick,
         }
     }
 })
 </script>
 <style lang="scss" scoped>
-.upload-single{
+.upload-multiple{
     :deep(.n-upload-file-list){
         display: flex;
         justify-content: v-bind(fileListJustifyContent);

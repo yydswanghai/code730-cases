@@ -1,15 +1,24 @@
 <template>
     <div class="upload-container">
-        <Single fileListJustifyContent="center" />
+        <div class="flex">
+            <h3>单张图片上传</h3>
+            <Single fileListJustifyContent="center" />
+        </div>
+        <div class="flex">
+            <h3>多张图片上传</h3>
+            <Multiple fileListJustifyContent="center" />
+        </div>
     </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue"
 import Single from './components/single.vue'
+import Multiple from './components/multiple.vue'
 export default defineComponent({
     components: {
-        Single
+        Single,
+        Multiple
     },
     setup(){
 
@@ -24,8 +33,13 @@ export default defineComponent({
     width: 100%;
     height: calc(100vh - 108px);
     display: flex;
-    align-items: center;
-    justify-content: center;
     background: #eee;
+    .flex{
+        padding-top: 50px;
+        flex: 0 0 50%;
+        h3{
+            text-align: center;
+        }
+    }
 }
 </style>

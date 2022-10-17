@@ -7,3 +7,11 @@ export function upload(data: any) {
         data,
     })
 }
+
+export function uploadMultiple(data: any) {
+    return http.request({
+        method: 'post',
+        url: '/uploads',
+        data,
+    })
+}

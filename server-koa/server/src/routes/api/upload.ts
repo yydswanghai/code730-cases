@@ -43,15 +43,36 @@ const upload = multer({
 });
 
 router.post('/upload', async (ctx: ParameterizedContext, next: Next) => {
-    const err = await upload.single('image')(ctx, next)
+    const err = await upload.single('image-single')(ctx, next)
                 .then(res => res)
                 .catch(err => err)
 
     if(err){
+        console.error(err)
         ctx.body = getError('上传文件出错', 1004)
     }else{
         const url= `http://localhost:9525/upload/${ctx.file.filename}`
         ctx.body = getSuccess({ url })
+    }
+})
+
+router.post('/uploads', async (ctx: ParameterizedContext, next: Next) => {
+    const err = await upload.fields([{ name: 'image-multiple'}, { name: 'image-other' }])(ctx, next)
+                .then(res => res)
+                .catch(err => err)
+
+    if(err){
+        console.error(err)
+        ctx.body = getError('上传文件出错', 1004)
+    }else{
+        const files: any = [];
+        ctx.files['image-multiple'].forEach(item => {
+            files.push({
+                filename: item.filename,
+                url: `http://localhost:9525/upload/${item.filename}`
+            })
+        })
+        ctx.body = getSuccess(files)
     }
 })
 
