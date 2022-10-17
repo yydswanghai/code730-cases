@@ -42,7 +42,7 @@ import { uploadMultiple } from "@/api/upload"
 import { statusCodeEnum } from '@/enums/statusCodeEnum'
 
 export default defineComponent({
-    emits: ['success', 'remove'],
+    emits: ['success', 'fail'],
     props: {
         triggerWidth: {
             type: Number,
@@ -84,12 +84,14 @@ export default defineComponent({
                     previewImages.value.push(item)
                 })
                 $message.success('上传成功')
+                ctx.emit('success')
             }else{
                 $message.error('上传失败');
+                ctx.emit('fail')
             }
         }
         /* 预览文件 */
-        function preview(file: UploadFileInfo) {
+        function preview() {
             showModal.value = true;
         }
 

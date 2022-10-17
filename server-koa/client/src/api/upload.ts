@@ -15,3 +15,11 @@ export function uploadMultiple(data: any) {
         data,
     })
 }
+
+export function upload2water(data: any) {
+    return http.request({
+        method: 'post',
+        url: '/upload2water',
+        data,
+    })
+}
