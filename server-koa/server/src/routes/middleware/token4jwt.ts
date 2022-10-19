@@ -28,6 +28,7 @@ export default async function (ctx: ParameterizedContext, next: Next) {
         ctx.state.userId = (token as JwtPayload).id;
         await next();
     }else{// 认证失败
-        ctx.body = getError('你还没有认证身份', 403);
+        ctx.status = 403;
+        ctx.body = getError('你还没有认证身份');
     }
 }

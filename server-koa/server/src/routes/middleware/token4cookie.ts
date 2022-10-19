@@ -23,7 +23,8 @@ export default async function (ctx: ParameterizedContext, next: Next) {
 
     const token = ctx.cookies.get('token') || ctx.headers.authorization ;
     if(!token){// 没有认证
-        ctx.body = getError('你还没有认证身份', 403);
+        ctx.status = 403;
+        ctx.body = getError('你还没有认证身份');
         return;
     }
     // 认证通过，先解密

@@ -12,6 +12,7 @@ import proxyMid from './middleware/proxy'
 import apiLogMid from './middleware/apiLog'
 import adminRouter from './api/admin'
 import uploadRouter from './api/upload'
+import downloadRouter from './api/download'
 
 const app = new Koa();
 const server = http.createServer(app.callback());
@@ -48,6 +49,7 @@ app.use(koaStatic(
 
 app.use(adminRouter)
 app.use(uploadRouter)
+app.use(downloadRouter)
 
 app.on('error', (err, ctx) => {
     console.error(err)

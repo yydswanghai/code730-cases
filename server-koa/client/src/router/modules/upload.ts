@@ -25,7 +25,7 @@ const routes: Array<IRouteRecordRaw> = [
         name: 'Upload',
         component: Layout,
         redirect: '/upload/index',
-        meta: { title: '文件上传', icon: renderIcon(UploadOutline) },
+        meta: { title: '文件上传&下载', icon: renderIcon(UploadOutline) },
         children: [
             {
                 path: 'index',
@@ -38,6 +38,12 @@ const routes: Array<IRouteRecordRaw> = [
                 name: 'Upload-Water',
                 component: () => import('@/views/menus/upload/water.vue'),
                 meta: { title: '上传加水印' },
+            },
+            {
+                path: 'download',
+                name: 'Upload-Download',
+                component: () => import('@/views/menus/upload/download.vue'),
+                meta: { title: '下载文件' },
             },
         ]
     }

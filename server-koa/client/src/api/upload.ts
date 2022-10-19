@@ -1,5 +1,6 @@
 import { http } from './http'
 
+// 文件上传
 export function upload(data: any) {
     return http.request({
         method: 'post',
@@ -21,5 +22,19 @@ export function upload2water(data: any) {
         method: 'post',
         url: '/upload2water',
         data,
+    })
+}
+
+// 获取所有可以下载的文件
+export function getAllFiles() {
+    return http.request({
+        method: 'get',
+        url: '/download/all',
+    })
+}
+export function download(filename: string) {
+    return http.request({
+        method: 'post',
+        url: `/download/${filename}`,
     })
 }
