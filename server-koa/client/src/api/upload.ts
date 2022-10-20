@@ -32,9 +32,3 @@ export function getAllFiles() {
         url: '/download/all',
     })
 }
-export function download(filename: string) {
-    return http.request({
-        method: 'post',
-        url: `/download/${filename}`,
-    })
-}

@@ -37,7 +37,7 @@ const routes: Array<IRouteRecordRaw> = [
                 path: 'water',
                 name: 'Upload-Water',
                 component: () => import('@/views/menus/upload/water.vue'),
-                meta: { title: '上传加水印' },
+                meta: { title: '图片加水印' },
             },
             {
                 path: 'download',

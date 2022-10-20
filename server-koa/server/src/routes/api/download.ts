@@ -22,11 +22,12 @@ router.get('/all', async (ctx: ParameterizedContext) => {
     const files = await promises.readdir(resolve(__dirname, '../../../public/upload/'));
     ctx.body = getSuccess(files)
 })
-
+// 下载
 router.get('/:filename', async (ctx: ParameterizedContext) => {
-    const absPath = `/upload/${ctx.params.filename}`
+    const absPath = ctx.params.filename;
+    const resourcesDir = resolve(__dirname, '../../../public/upload/');
     ctx.attachment(absPath);
-    await send(ctx, absPath, { root: 'http://localhost' });
+    await send(ctx, absPath, { root: resourcesDir });
 })
 
 /**
