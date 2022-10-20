@@ -19,7 +19,7 @@ router.post('/', async (ctx: ParameterizedContext) => {
             const result = await QRCode.toDataURL(str);
             ctx.body = getSuccess({ result })
         } catch (error) {
-            ctx.body = getError('请求体参数为空', 10020)
+            ctx.body = getError('其他错误', 10020)
         }
     }else{
         ctx.body = getError('请求体参数为空', 10020)
