@@ -4,6 +4,9 @@ import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
 import { resolve } from 'path'
 import svgLoader from 'vite-svg-loader'
+import AutoImport from 'unplugin-auto-import/vite'
+import Components from 'unplugin-vue-components/vite'
+import { NaiveUiResolver } from 'unplugin-vue-components/resolvers'
 
 function pathResolve(dir: string) {
   return resolve(process.cwd(), '.', dir);
@@ -48,6 +51,15 @@ export default ({ command, mode }:ConfigEnv):UserConfig => {
       vue(),
       vueJsx(),
       svgLoader(),
+      AutoImport({
+        imports: ['vue', 'vue-router'],
+        dts: 'src/auto-import.d.ts'
+      }),
+      Components({
+        dts: 'src/components.d.ts',
+        include: [/\.vue$/, /\.vue\?vue/, /\.md$/],
+        resolvers: [NaiveUiResolver()]
+      })
     ]
   }
 }

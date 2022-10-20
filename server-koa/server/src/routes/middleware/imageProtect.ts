@@ -10,7 +10,7 @@ export default async function (ctx: ParameterizedContext, next: Next){
     let referer: any = ctx.request.header.referer;
     // 仅处理图片
     const extName = extname(ctx.path);
-    console.log(host, referer, ctx.url)
+    // console.log(host, referer, ctx.url)
     const whiteList = ['.jpg', '.jpeg', '.png', '.gif', '.webp'];
     if(!whiteList.includes(extName)){// 请求的不是图片，允许盗链
         await next();

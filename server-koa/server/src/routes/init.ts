@@ -14,6 +14,7 @@ import imageProtectMid from './middleware/imageProtect'
 import adminRouter from './api/admin'
 import uploadRouter from './api/upload'
 import downloadRouter from './api/download'
+import qrcodeRouter from './api/qrcode'
 
 const app = new Koa();
 const server = http.createServer(app.callback());
@@ -52,6 +53,7 @@ app.use(koaStatic(
 app.use(adminRouter)
 app.use(uploadRouter)
 app.use(downloadRouter)
+app.use(qrcodeRouter)
 
 app.on('error', (err, ctx) => {
     console.error(err)
