@@ -1,12 +1,12 @@
-console.log(12345613)
+console.log('start 123')
 
-fetch('/api/admin/oauth/token?grant_type=password&scope=app&type=1', {
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-    },
-    body: Qs.stringify({ loginId: 'admin', loginPwd: 'admin' })
-})
+// fetch('/api/admin/oauth/token?grant_type=password&scope=app&type=1', {
+//     method: 'POST',
+//     headers: {
+//         'Content-Type': 'application/x-www-form-urlencoded',
+//     },
+//     body: Qs.stringify({ loginId: 'admin', loginPwd: 'admin' })
+// })
 
 // fetch('/api/admin/whoami', {
 //     method: 'GET',

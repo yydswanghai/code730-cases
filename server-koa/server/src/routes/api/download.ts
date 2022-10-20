@@ -1,7 +1,7 @@
 import Router from '@koa/router'
 import { ParameterizedContext } from 'koa'
 import { resolve } from 'path'
-import { getSuccess, getError } from '../getSendResult'
+import { getSuccess } from '../getSendResult'
 import { promises } from 'fs'
 import send from 'koa-send'
 /**

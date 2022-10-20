@@ -10,6 +10,7 @@ import tokenMid from './middleware/token4jwt'
 import corsMid from './middleware/cors'
 import proxyMid from './middleware/proxy'
 import apiLogMid from './middleware/apiLog'
+import imageProtectMid from './middleware/imageProtect'
 import adminRouter from './api/admin'
 import uploadRouter from './api/upload'
 import downloadRouter from './api/download'
@@ -28,6 +29,7 @@ const CONFIG = {
     renew: false
 }
 app.use(session(CONFIG, app))
+app.use(imageProtectMid)
 app.use(corsMid)
 app.use(koaBody())// 处理请求
 // app.use(proxyMid)
