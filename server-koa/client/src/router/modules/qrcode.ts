@@ -31,7 +31,7 @@ const routes: Array<IRouteRecordRaw> = [
                 path: 'index',
                 name: 'Qrcode-Index',
                 component: () => import('@/views/menus/qrcode/index.vue'),
-                meta: { title: '二维码生成' },
+                meta: { title: '二维码' },
             },
         ]
     }
