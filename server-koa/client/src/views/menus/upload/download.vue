@@ -50,6 +50,8 @@ export default defineComponent({
 </script>
 <style lang="scss" scoped>
 .download-container{
+    box-sizing: border-box;
+    padding: 20px;
     .button-wrap{
         display: flex;
         flex-wrap: wrap;

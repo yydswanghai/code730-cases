@@ -21,7 +21,7 @@ export default async function (ctx: ParameterizedContext, next: Next){
     }
 
     if(host !== referer){
-        ctx.url = '/404.jpeg';
+        ctx.url = '/img/404.jpeg';
     }
     await next()
 }

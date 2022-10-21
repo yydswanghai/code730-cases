@@ -1,49 +1,23 @@
 <template>
     <div class="qrcode-container">
-        <n-auto-complete v-model:value="value" :options="options">
-            <template #default="{ handleInput, handleBlur, handleFocus, value: inputValue }" >
-                <n-input
-                    type="textarea"
-                    :value="inputValue"
-                    placeholder="邮箱"
-                    @input="handleInput"
-                    @focus="handleFocus"
-                    @blur="handleBlur"
-                />
-            </template>
-        </n-auto-complete>
-        <n-button @click="confirm">确认</n-button>
+        <GenerateQrcode title="生成二维码" />
+        <GenerateQrcode title="生成个性化二维码" :type="2" />
     </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed } from "vue"
-import { getQrcode } from '@/api/qrcode'
+import { defineComponent } from "vue"
+import GenerateQrcode from './components/GenerateQrcode.vue'
 
 export default defineComponent({
-    setup(){
-        const value = ref('');
-        const options = computed(() => {
-            const arr = ['.com', '@gmail.com', '@163.com', '@qq.com'];
-            return arr.map(suffix => {
-                const prefix = value.value.split('@')[0]
-                return {
-                    label: prefix + suffix,
-                    value: prefix + suffix
-                }
-            })
-        });
-        async function confirm() {
-            const resp = await getQrcode({ str: value.value })
-        }
-        return {
-            value,
-            options,
-            confirm
-        }
-    }
+    components: {
+        GenerateQrcode,
+    },
 })
 </script>
 <style lang="scss" scoped>
-    
+.qrcode-container{
+    box-sizing: border-box;
+    padding: 20px;
+}
 </style>
