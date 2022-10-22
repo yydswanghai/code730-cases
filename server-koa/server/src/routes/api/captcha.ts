@@ -12,14 +12,14 @@ const router = new Router({
 
 router.get('/', async (ctx: ParameterizedContext) => {
     const captcha = svgCaptcha.create({
-        size: 6,
-        ignoreChars: 'iTlLoO',
-        noise: 6,
-        color: true,
+        size: 4,// 验证码长度
+        ignoreChars: 'iTlLoO',// 验证码字符中排除这些
+        noise: 2,// 干扰线条的数量
+        color: true,// 验证码的字符是否有颜色
     })
     // 把验证码中的文本存放到session中
     ctx.session.captcha = captcha.text.toLowerCase();
-    console.log(ctx.session)
+    // console.log(ctx.session)
 
     ctx.response.type = 'image/svg+xml';
     ctx.body = captcha.data

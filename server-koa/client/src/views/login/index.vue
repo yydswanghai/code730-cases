@@ -72,7 +72,7 @@
                             </div>
                         </n-form-item>
                         <n-form-item>
-                            <n-button type="primary" @click="handleSubmit" size="large" :loading="loading" block>
+                            <n-button type="primary" size="large" :loading="loading" block @click="handleSubmit">
                                 登录
                             </n-button>
                         </n-form-item>
@@ -84,7 +84,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, reactive, computed } from 'vue'
+import { defineComponent, ref, reactive, computed, onMounted } from 'vue'
 import { useMessage, FormInst } from 'naive-ui'
 import type { MessageReactive } from 'naive-ui'
 import { useRoute, useRouter } from 'vue-router'
@@ -182,6 +182,14 @@ export default defineComponent({
         function refresh() {
             captchaStr.value = '/api/captcha?d' + Math.random();
         }
+        onMounted(() => {
+            document.onkeydown = function (e) {
+                const key = window && (window as any).event.keyCode
+                if (key == 13){
+                    handleSubmit(e as any)
+                }
+            }
+        })
 
         return {
             userEnum,
