@@ -84,9 +84,9 @@ router.post('/oauth/token', async (ctx: ParameterizedContext) => {
 
     if(isSucc){
         // 验证验证码
-        if(!captchaHandler(ctx)){
+        if(!captchaAdmin(ctx)){
             ctx.status = 401;
-            ctx.body = getError('验证码有问题', 401);
+            ctx.body = getError('验证码错误', 401);
             return;
         }
         const result = await login(ctx.request.body);
@@ -101,26 +101,8 @@ router.post('/oauth/token', async (ctx: ParameterizedContext) => {
     }
 })
 
-function captchaHandler(ctx: ParameterizedContext) {
-    console.log(ctx.session)
-    if(!ctx.session.records){
-        // 如果session总没有访问记录
-        ctx.session.records = [];
-    }
-    const now = new Date().getTime();
-    ctx.session.records.push(now);// 讲这次请求的访问时间记录下来
-
-    // 如果在一小段时间内请求达到了一定的数量，就可能是机器
-    const duration = 1000 * 10;
-    const repeat = 3;
-
-    ctx.session.records = ctx.session.records.filter(
-        (time) => now - time <= duration
-    );
-
-    // 一小段时间内请求大于repeat次 或 请求体里有 captcha 字段
-    if(ctx.session.records.length >= repeat || 'captcha' in ctx.request.body){
-        // 验证验证码
+function captchaAdmin(ctx: ParameterizedContext) {
+    if('captcha' in ctx.request.body){
         const reqCaptcha = ctx.request.body?.captcha?.toLowerCase();//用户传递的验证码
         if(reqCaptcha !== ctx.session.captcha){
             // 验证码有问题
@@ -129,7 +111,7 @@ function captchaHandler(ctx: ParameterizedContext) {
             return true;
         }
     }else{
-        return true;
+        return false;
     }
 }
 

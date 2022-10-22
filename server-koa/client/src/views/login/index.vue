@@ -48,10 +48,12 @@
                                 </template>
                             </n-input>
                         </n-form-item>
-                        <n-form-item label="验证码">
-                            <div style="width: 100%;text-align: right;">
-                                <img :src="formValue.captcha" width="120" @click="refreshCaptcha" />
-                            </div>
+                        <n-form-item path="captcha">
+                            <n-input v-model:value="formValue.captcha" type="text" placeholder="请输入验证码">
+                                <template #suffix>
+                                    <img :src="captchaStr" height="40" @click="refresh" />
+                                </template>
+                            </n-input>
                         </n-form-item>
                         <n-form-item class="default-color" style="display: flex;">
                             <n-checkbox v-model:checked="autoLogin">自动登录</n-checkbox>
@@ -106,14 +108,16 @@ export default defineComponent({
         const { VITE_APP_TITLE } = import.meta.env;
         const siteTitle = VITE_APP_TITLE || '';
         const formRef = ref<FormInst | null>(null)
+        const captchaStr = ref('/api/captcha');
         const formValue = reactive({
             loginId: '',
             loginPwd: '',
-            captcha: '/api/captcha'// 验证码
+            captcha: ''// 验证码
         })
         const rules = {
-            loginId: { required: true, message: '请输入用户名', trigger: 'blur' },
-            loginPwd: { required: true, message: '请输入密码', trigger: 'blur' },
+            loginId: { required: true, message: '用户名不能为空', trigger: 'blur' },
+            loginPwd: { required: true, message: '密码不能为空', trigger: 'blur' },
+            captcha: { required: true, message: '验证码不能为空', trigger: 'blur' }
         }
         const autoLogin = ref(true)// 自动登录
         const loading = ref(false)
@@ -156,7 +160,8 @@ export default defineComponent({
                     try {
                         const res = await userStore.login({
                             loginId: formValue.loginId,
-                            loginPwd: md5(formValue.loginPwd)
+                            loginPwd: md5(formValue.loginPwd),
+                            captcha: formValue.captcha
                         }, defaultTab.value!)
                         if(res){
                             const path = decodeURIComponent($route.query?.redirect as string || '/');
@@ -174,8 +179,8 @@ export default defineComponent({
                 }
             })
         }
-        function refreshCaptcha() {
-            formValue.captcha = '/api/captcha?d' + Math.random();
+        function refresh() {
+            captchaStr.value = '/api/captcha?d' + Math.random();
         }
 
         return {
@@ -188,9 +193,10 @@ export default defineComponent({
             loading,
             tabs,
             defaultTab,
+            captchaStr,
             handleSubmit,
             handleUpdateTab,
-            refreshCaptcha
+            refresh
         }
     }
 })

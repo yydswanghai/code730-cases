@@ -2,7 +2,7 @@ import { http } from './http'
 import { userEnum } from '@/enums/userEnum'
 import Qs from 'Qs'
 /* 登录 */
-export function login(data: { loginId: string, loginPwd: string }, type: userEnum) {
+export function login(data: { loginId: string, loginPwd: string, captcha: string }, type: userEnum) {
     let params = {};
     if(type === userEnum.user1){// 个人用户
         params = { scope: 'app', type: '1' }

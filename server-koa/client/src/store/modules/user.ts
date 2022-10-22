@@ -38,7 +38,7 @@ export const useUserStore = defineStore({
         setUserInfo(info: object | null){// 设置用户信息
             this.user_info = info;
         },
-        async login(params: { loginId: string, loginPwd: string }, type: userEnum){// 登录
+        async login(params: { loginId: string, loginPwd: string, captcha: string }, type: userEnum){// 登录
             try{
                 const resp = await login(params, type);
                 if(resp.code === statusCodeEnum.success){
