@@ -1,6 +1,6 @@
 <template>
     <div class="add-container">
-        <n-button type="info" @click="$emit('update:modelValue', modelValue-1)">返回</n-button>
+        <n-button type="info" @click="goHome">返回</n-button>
         <h2>添加一本书籍</h2>
         <n-form ref="formRef" label-placement="left" label-width="92" :model="formValue" :rules="rules">
             <n-form-item path="name" label="书籍名称：">
@@ -12,12 +12,12 @@
             <n-form-item path="publishDate" label="发布日期：">
                 <n-date-picker v-model:formatted-value="formValue.publishDate" type="date" value-format="yyyy-MM-dd" />
             </n-form-item>
-            <n-form-item path="imgUrl" label="书籍封面：">
-                <n-input v-model:value="formValue.imgUrl" placeholder="请输入书籍封面" />
+            <n-form-item path="imgurl" label="书籍封面：">
+                <n-input v-model:value="formValue.imgurl" placeholder="请输入书籍封面" />
             </n-form-item>
             <n-form-item path="description" label="书籍描述：">
                 <div style="border: 1px solid #ccc">
-                    <!-- <Toolbar
+                    <Toolbar
                         style="border-bottom: 1px solid #ccc"
                         :editor="editorRef"
                         :defaultConfig="toolbarConfig"
@@ -29,7 +29,7 @@
                         :defaultConfig="editorConfig"
                         mode="default"
                         @onCreated="handleCreated"
-                    /> -->
+                    />
                 </div>
             </n-form-item>
             <n-form-item>
@@ -46,13 +46,13 @@
 <script lang="ts">
 import { FormInst, useMessage } from "naive-ui"
 import { defineComponent, reactive, shallowRef, onBeforeUnmount } from "vue"
-// import '@wangeditor/editor/dist/css/style.css' // 引入 css
-// import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
+import '@wangeditor/editor/dist/css/style.css' // 引入 css
+import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
 import { addBook } from '@/api/editor'
 import { statusCodeEnum } from '@/enums/statusCodeEnum'
 
 export default defineComponent({
-    // components: { Editor, Toolbar },
+    components: { Editor, Toolbar },
     emits: ['update:modelValue'],
     props: {
         modelValue: {
@@ -60,13 +60,13 @@ export default defineComponent({
             default: 0,
         },
     },
-    setup() {
+    setup(props, ctx) {
         const $message = useMessage()
         const formRef = ref<FormInst | null>(null)
         const formValue = reactive({
             name: '',
             author: '',
-            imgUrl: '',
+            imgurl: '',
             publishDate: '2022-10-05',
             description: '<p></p>'// 内容 HTML
         })
@@ -82,12 +82,16 @@ export default defineComponent({
                     const resp =  await addBook(formValue)
                     if(resp.code === statusCodeEnum.success){
                         $message.success('添加成功')
+                        goHome()
                     }
                 } else {
                     $message.warning("提交失败，请填写完整表单");
                     console.log(errors);
                 }
             })
+        }
+        function goHome() {
+            ctx.emit('update:modelValue', props.modelValue-1)
         }
 
         // 编辑器实例，必须用 shallowRef
@@ -110,6 +114,7 @@ export default defineComponent({
             formValue,
             rules,
             handleSubmit,
+            goHome,
             editorRef,
             toolbarConfig,
             editorConfig,

@@ -9,9 +9,10 @@ export function addBook(data: any) {
     })
 }
 
-export function getBooks() {
+export function getBooks(params: { page: number, pageSize: number }) {
     return http.request({
         method: 'get',
         url: '/book',
+        params,
     })
 }

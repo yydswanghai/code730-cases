@@ -44,11 +44,12 @@ app.use(historyApiFallback({
 app.use(koaStatic(
     resolve(__dirname, '../../public/'),
     {
-        setHeaders(res: ParameterizedContext["res"], path: string){
-            if(!path.endsWith('.html')){// 不缓存 html 文件
-                res.setHeader('Cache-Control', `max-age=${3600*24}`)
-            }
-        }
+        // 关于后端设置请求缓存
+        // setHeaders(res: ParameterizedContext["res"], path: string){
+        //     if(!path.endsWith('.html')){// 不缓存 html 文件
+        //         res.setHeader('Cache-Control', `max-age=${3600*24}`)
+        //     }
+        // }
     }
 ))
 
