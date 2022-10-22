@@ -48,6 +48,11 @@
                                 </template>
                             </n-input>
                         </n-form-item>
+                        <n-form-item label="验证码">
+                            <div style="width: 100%;text-align: right;">
+                                <img :src="formValue.captcha" width="120" @click="refreshCaptcha" />
+                            </div>
+                        </n-form-item>
                         <n-form-item class="default-color" style="display: flex;">
                             <n-checkbox v-model:checked="autoLogin">自动登录</n-checkbox>
                         </n-form-item>
@@ -104,7 +109,7 @@ export default defineComponent({
         const formValue = reactive({
             loginId: '',
             loginPwd: '',
-            isCaptcha: true,
+            captcha: '/api/captcha'// 验证码
         })
         const rules = {
             loginId: { required: true, message: '请输入用户名', trigger: 'blur' },
@@ -169,6 +174,9 @@ export default defineComponent({
                 }
             })
         }
+        function refreshCaptcha() {
+            formValue.captcha = '/api/captcha?d' + Math.random();
+        }
 
         return {
             userEnum,
@@ -182,6 +190,7 @@ export default defineComponent({
             defaultTab,
             handleSubmit,
             handleUpdateTab,
+            refreshCaptcha
         }
     }
 })

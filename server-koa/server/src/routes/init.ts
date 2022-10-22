@@ -15,6 +15,7 @@ import adminRouter from './api/admin'
 import uploadRouter from './api/upload'
 import downloadRouter from './api/download'
 import qrcodeRouter from './api/qrcode'
+import captchaMid from './api/captcha'
 
 const app = new Koa();
 const server = http.createServer(app.callback());
@@ -50,6 +51,7 @@ app.use(koaStatic(
     }
 ))
 
+app.use(captchaMid)
 app.use(adminRouter)
 app.use(uploadRouter)
 app.use(downloadRouter)
