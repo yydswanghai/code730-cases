@@ -14,7 +14,7 @@ import corsMid from './middleware/cors'
 import apiLogMid from './middleware/apiLog'
 import imgProtectMid from './middleware/imgProtect'
 import proxyMid from './middleware/proxy'
-import captchaMid from './middleware/captcha'
+import captchaMid from './api/captcha'
 
 // 创建一个express应用
 const app = express();
