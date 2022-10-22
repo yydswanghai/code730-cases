@@ -6,3 +6,5 @@ export { default as Tree } from './tree.svg?component'
 export { default as ComponentOutline } from './component-outline.svg?component'
 export { default as UploadOutline } from './upload-outline.svg?component'
 export { default as QrcodeOutline } from './qrcode-outline.svg?component'
+export { default as EditorOutline } from './editor-outline.svg?component'
+

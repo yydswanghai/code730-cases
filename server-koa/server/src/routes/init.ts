@@ -16,6 +16,7 @@ import uploadRouter from './api/upload'
 import downloadRouter from './api/download'
 import qrcodeRouter from './api/qrcode'
 import captchaMid from './api/captcha'
+import bookRouter from './api/book'
 
 const app = new Koa();
 const server = http.createServer(app.callback());
@@ -56,6 +57,7 @@ app.use(adminRouter)
 app.use(uploadRouter)
 app.use(downloadRouter)
 app.use(qrcodeRouter)
+app.use(bookRouter)
 
 app.on('error', (err, ctx) => {
     console.error(err)
