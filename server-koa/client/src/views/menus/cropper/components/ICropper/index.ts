@@ -1,1 +1,0 @@
-export { default as ICropper } from './index.vue'
