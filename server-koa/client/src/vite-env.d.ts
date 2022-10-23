@@ -14,3 +14,8 @@ declare interface Window {
   $message: any
   $dialog: any
 }
+
+declare module 'node_modules/cropperjs/dist/cropper.js' {
+  import cropper from 'cropperjs';
+  export default cropper;
+}

@@ -17,7 +17,7 @@
             </n-form-item>
             <n-form-item path="description" label="书籍描述：">
                 <div style="border: 1px solid #ccc">
-                    <Toolbar
+                    <!-- <Toolbar
                         style="border-bottom: 1px solid #ccc"
                         :editor="editorRef"
                         :defaultConfig="toolbarConfig"
@@ -29,7 +29,7 @@
                         :defaultConfig="editorConfig"
                         mode="default"
                         @onCreated="handleCreated"
-                    />
+                    /> -->
                 </div>
             </n-form-item>
             <n-form-item>
@@ -46,13 +46,13 @@
 <script lang="ts">
 import { FormInst, useMessage } from "naive-ui"
 import { defineComponent, reactive, shallowRef, onBeforeUnmount } from "vue"
-import '@wangeditor/editor/dist/css/style.css' // 引入 css
-import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
+// import '@wangeditor/editor/dist/css/style.css' // 引入 css
+// import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
 import { addBook } from '@/api/editor'
 import { statusCodeEnum } from '@/enums/statusCodeEnum'
 
 export default defineComponent({
-    components: { Editor, Toolbar },
+    // components: { Editor, Toolbar },
     emits: ['update:modelValue'],
     props: {
         modelValue: {
