@@ -6,8 +6,9 @@ import { extname } from 'path'
  * 主要通过判断请求头：Host 与 Referer 是否相同
  */
 export default async function (ctx: ParameterizedContext, next: Next){
-    const host = 'localhost:9525' || ctx.request.header.host;
+    const host = ctx.request.header.host;
     let referer: any = ctx.request.header.referer;
+    console.log(host, referer)
     // 仅处理图片
     const extName = extname(ctx.path);
     // console.log(host, referer, ctx.url)
