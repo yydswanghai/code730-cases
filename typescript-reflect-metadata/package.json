@@ -9,8 +9,13 @@
     },
     "author": "",
     "license": "ISC",
+    "dependencies": {
+        "@types/node": "^18.7.18"
+    },
     "devDependencies": {
-        "@types/node": "^17.0.42",
-        "reflect-metadata": "^0.1.13"
+        "reflect-metadata": "^0.1.13",
+        "nodemon": "^2.0.22",
+        "ts-node": "^10.9.1",
+        "typescript": "^5.0.4"
     }
 }
