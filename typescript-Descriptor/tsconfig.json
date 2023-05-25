@@ -1,15 +1,12 @@
 {
     "compilerOptions": {
-        "target": "es2016",
-        "module": "commonjs",
-        "lib": [
-            "es2016"
-        ],
-        "outDir": "./dist",
-        "removeComments": true,
-        "noImplicitUseStrict": true,
-        "esModuleInterop": true,
+        "target": "es2016",// 配置编译目标代码的版本标准
+        "lib": ["es2016"],// 默认情况下ts使用的环境
+        "module": "commonjs",/* 模块化标准 */
+        "esModuleInterop": true,/* 启用es模块化交互非es模块导出 */
+        "removeComments": true,/* 编译删除注释 */
         "experimentalDecorators": true,
+        "outDir": "./dist",/* 编译输出目录 */
         // "strictNullChecks": true,
         // "strictPropertyInitialization": true
     },
