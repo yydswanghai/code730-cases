@@ -14,7 +14,5 @@
         "removeComments": true,/* 编译删除注释 */
         "outDir": "./lib"/* 编译输出目录 */
     },
-    "include": [
-        "src"
-    ]
+    "include": ["src"]
 }
