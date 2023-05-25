@@ -14,5 +14,7 @@
         "removeComments": true,/* 编译删除注释 */
         "outDir": "./lib"/* 编译输出目录 */
     },
-    "include": ["src"]
+    "include": [// 指定ts编译的文件目录，默认是全部都编译
+        "src"
+    ]
 }
