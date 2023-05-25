@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <style>
+        body{
+            margin: 0;
+            padding: 0;
+        }
+        #wrapper{
+            width: 100%;
+            height: 4000px;
+            background-color: white;
+        }
+        .header, .footer{
+            width: 100%;
+            height: 1080px;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 59px;
+            font-family: fantasy;
+        }
+        #box{
+            width: 100%;
+            height: 1280px;
+            background-color: #abc9b439;
+        }
+        #list-container{
+            width: 100%;
+            height: 480px;
+            background: rgba(0, 0, 0, .3);
+            position: sticky;
+            top: 0;
+        }
+        .item{
+            width: 80px;
+            height: 80px;
+            position: absolute;
+            border-radius: 4px;
+        }
+        .item:nth-of-type(6n + 1){
+            background-color: #409eff;
+        }
+        .item:nth-of-type(6n + 2){
+            background-color: #67c23a;
+        }
+        .item:nth-of-type(6n + 3){
+            background-color: #e6a23c;
+        }
+        .item:nth-of-type(6n + 4){
+            background-color: #909399;
+        }
+        .item:nth-of-type(6n + 5){
+            background-color: #f56c6c;
+        }
+        .item:nth-of-type(6n + 6){
+            background-color: rgb(114, 50, 221);
+        }
+        .pos1{ top: 100px; left: 80px; }
+        .pos2{ top: 100px; left: 320px; }
+        .pos3{ top: 100px; left: 560px; }
+        .pos4{ top: 100px; left: 800px; }
+        .pos5{ top: 100px; left: 1040px; }
+        .pos6{ top: 100px; left: 1280px; }
+        .pos7{ top: 280px; left: 80px; }
+        .pos8{ top: 280px; left: 320px; }
+        .pos9{ top: 280px; left: 560px; }
+        .pos10{ top: 280px; left: 800px; }
+        .pos11{ top: 280px; left: 1040px; }
+        .pos12{ top: 280px; left: 1280px; }
+    </style>
+    <div id="wrapper">
+        <h1 class="header">header</h1>
+        <div id="box">
+            <div id="list-container">
+                <div data-order="2" class="item pos1"></div>
+                <div data-order="1" class="item pos2"></div>
+                <div data-order="0" class="item pos3"></div>
+                <div data-order="0" class="item pos4"></div>
+                <div data-order="1" class="item pos5"></div>
+                <div data-order="2" class="item pos6"></div>
+                <div data-order="2" class="item pos7"></div>
+                <div data-order="1" class="item pos8"></div>
+                <div data-order="0" class="item pos9"></div>
+                <div data-order="0" class="item pos10"></div>
+                <div data-order="1" class="item pos11"></div>
+                <div data-order="2" class="item pos12"></div>
+            </div>
+        </div>
+        <h1 class="footer">footer</h1>
+    </div>
+    <script>
+        var box = document.getElementById('box');
+        var container = document.getElementById('list-container');
+        var items = document.getElementsByClassName('item');
+
+        /*
+         * 创建一个滚动条从 scrollStart ~ scrollEnd 对应
+         * 取值范围在 valueStart ~ valueEnd 的动画函数
+         * @param scroll 当前滚动的位置
+         * 比如 100~500 之间 变化opacity 0~1 则滚动在200时：0+(1-0)*(200-100)/(500-100)
+         */
+        function createAnimation(scrollStart, scrollEnd, valueStart, valueEnd) {
+            return function (scroll) {
+                if(scroll <= scrollStart){
+                    return valueStart;
+                }
+                if(scroll >= scrollEnd){
+                    return valueEnd;
+                }
+                return valueStart + (valueEnd - valueStart) * (scroll - scrollStart) / (scrollEnd - scrollStart);
+            }
+        }
+
+        /*
+         * key => dom
+         * value => {
+         *      opacity: (scroll) => '属性值',
+         *      transform: (scroll) => '属性值'
+         * }
+         */
+        const animationMap = new Map();
+        // 生成该动画map数据结构
+        function createMap() {
+            animationMap.clear();
+            const boxRect = box.getBoundingClientRect();
+            // 从container的底部开始
+            const startScroll = boxRect.top + window.scrollY - container.clientHeight;
+            const endScroll = boxRect.bottom + window.scrollY - window.innerHeight;
+            for(let item of items){
+                animationMap.set(item, getDomAnimation(item, startScroll, endScroll))
+            }
+        }
+        createMap()
+        function getDomAnimation(dom, startScroll, endScroll) {
+            startScroll = startScroll + dom.dataset.order*240;
+            const opacityAnimation = createAnimation(startScroll, endScroll, 0, 1);
+            const opacity = (scroll) => opacityAnimation(scroll);
+            const scaleAnimation = createAnimation(startScroll, endScroll, 0.5, 1);
+            const xAnimation = createAnimation(startScroll, endScroll,
+                container.clientWidth/2 - dom.offsetLeft - dom.clientWidth/2 ,0)
+            const yAnimation = createAnimation(startScroll, endScroll,
+                container.clientHeight/2 - dom.offsetTop - dom.clientHeight/2 ,0)
+            const transform = (scroll) => {
+                return `translate(${xAnimation(scroll)}px, ${yAnimation(scroll)}px) scale(${scaleAnimation(scroll)}) `
+            }
+            return {
+                opacity,
+                transform
+            }
+        }
+
+        function updateStyles() {
+            const scroll = window.scrollY;
+            for (const [dom, value] of animationMap) {
+                for (const cssProp in value) {
+                    dom.style[cssProp] = value[cssProp](scroll);
+                }
+            }
+        }
+
+        updateStyles()
+
+        window.addEventListener('scroll', updateStyles);
+    </script>
+</body>
+</html>
