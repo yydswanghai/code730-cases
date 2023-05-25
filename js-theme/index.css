@@ -1,0 +1,26 @@
+/* 默认亮色主题 */
+:root{
+    --text-color: #333;
+    --bg1: #c7ffdd;
+    --bg2: #fbd988;
+}
+html[data-theme='dark']{
+    --text-color: #fff;
+    --bg1: #102128;
+    --bg2: #2d5567;
+}
+.main{
+    height: 100vh;
+    font-family: serif;
+    background: linear-gradient(to bottom, var(--bg1), var(--bg2));
+    color: var(--text-color);
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    flex-direction: column;
+    font-size: 2em;
+    padding-top: 1em;
+}
+.main h1{
+    margin-top: 2em;
+}
