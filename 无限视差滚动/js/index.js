@@ -1,75 +1,74 @@
-const ArrayImg = [
-  './images/GirlFriend01.jpg',
-  './images/GirlFriend02.jpg',
-  './images/GirlFriend03.jpg',
-  './images/GirlFriend04.jpg',
-  './images/GirlFriend05.jpg',
-  './images/GirlFriend06.jpg',
-];
-const cur = document.querySelector('.scroll_box .cur .img_cur');
-const prev = document.querySelector('.scroll_box .prev .img_prev');
-const next = document.querySelector('.scroll_box .next .img_next');
+/**
+ * 先过渡 => 改变图片
+ * 注意 鼠标上， 图片下
+ * 01jpg 02jpg 03jpg idx=1 idx始终是指向 02jpg这张图的
+ * 03jpg 01jpg 02jpg idx=2
+ * 02jpg 03jpg 01jpg idx=0
+ */
+
+const ArrayImg = [ './images/girl01.jpg', './images/girl02.jpg', './images/girl03.jpg'];
 const scroll_box = document.querySelector('.scroll_box');
-let cur_id = +cur.dataset.id;
+const cur = scroll_box.querySelector('.cur .bg');
+const prev = scroll_box.querySelector('.prev .bg');
+const next = scroll_box.querySelector('.next .bg');
+
+/* 添加子元素 */
+const templateContent = document.querySelector('#text').content;
+prev.appendChild(document.importNode(templateContent, true));
+cur.appendChild(document.importNode(templateContent, true));
+next.appendChild(document.importNode(templateContent, true));
+
+let cur_idx = +cur.dataset.idx;// 
 let IsTransition = false;
 
 // 创建图片元素
-function CreatScroll_Img(cur_id) {
-  const prev_id = cur_id === 0 ? ArrayImg.length - 1 : cur_id - 1;
-  const next_id = cur_id === ArrayImg.length - 1 ? 0 : cur_id + 1;
-  cur.style.background = `url(${ArrayImg[cur_id]}) no-repeat center/cover`;
-  prev.style.background = `url(${ArrayImg[prev_id]}) no-repeat center/cover`;
-  next.style.background = `url(${ArrayImg[next_id]}) no-repeat center/cover`;
+function CreatScroll_Img(index) {
+  const pre_idx = index === 0 ? ArrayImg.length - 1 : index - 1;
+  const next_idx = index === ArrayImg.length - 1 ? 0 : index + 1;
+  console.log('pre:', pre_idx,' index:', index, ' next:', next_idx)
+  cur.style.backgroundImage = `url(${ArrayImg[index]})`;
+  prev.style.backgroundImage = `url(${ArrayImg[pre_idx]})`;
+  next.style.backgroundImage = `url(${ArrayImg[next_idx]})`;
 }
 
 // 图片滑动
 function scroll_Img(PrevOrNxet, cur) {
-  PrevOrNxet.children[0].innerHTML = `
-  <div class="text-box">
-        <div class="cnt">
-          <h2>LIVING</h2>
-          <p>
-            Meet six beautiful women from the first perspective and embark on a romantic journey with them.
-            It's up to you to decide who comes to the end, whether it's a seductive witch, a pure girl, an intelligent
-            sister, a
-            mischievous young lady, a sexy and spicy mother, or a cold and charming CEO.
-          </p>
-          <p>
-            <a href="#" target="_blank" class="btn">TO <strong>KNOW </strong><em>MY LOVE</em></a>
-          </p>
-        </div>
-      </div>
-  `;
-  PrevOrNxet.style.transition = 'height 1s';
+  const DURATION = 1;
+  PrevOrNxet.style.transition = `height ${DURATION}s`;
   PrevOrNxet.style.height = '100vh';
-  cur.style.transition = 'transform 1s';
+  cur.style.transition = `transform ${DURATION}s`;
   cur.style.transform = PrevOrNxet.dataset.name === "prev" ? `translateY(20%)` : `translateY(-20%)`;
   setTimeout(function () {
     PrevOrNxet.style.transition = 'none';
     cur.style.transition = 'none';
     cur.style.transform = `translateY(0)`;
-    cur.style.background = `url(${ArrayImg[cur_id]}) no-repeat center/cover`;
+    cur.style.backgroundimage = `url(${ArrayImg[cur_idx]})`;
     PrevOrNxet.style.height = '0';
     PrevOrNxet.offsetWidth; //强制渲染
-    CreatScroll_Img(cur_id);
+    CreatScroll_Img(cur_idx);
     IsTransition = false;
-  }, 1000);
+  }, DURATION * 1000);
 }
 
 // 滚动事件
 window.addEventListener('wheel', function (e) {
-  if (IsTransition === true) return;
+  if (IsTransition) return;
   IsTransition = true;
-  if (e.deltaY < 0) {
-    cur_id--;
-    if (cur_id < 0) cur_id = ArrayImg.length - 1;
-    scroll_Img(document.querySelector('.scroll_box .prev'), cur);
+  if (e.deltaY < 0) {// 上
+    cur_idx--;
+    if (cur_idx < 0) {
+      cur_idx = ArrayImg.length - 1;
+    }
+    scroll_Img(scroll_box.querySelector('.prev'), cur);
   }
-  if (e.deltaY > 0) {
-    cur_id = (cur_id + 1) % ArrayImg.length;
-    scroll_Img(document.querySelector('.scroll_box .next'), cur);
+  if (e.deltaY > 0) {// 下
+    cur_idx++;
+    if(cur_idx > ArrayImg.length - 1) {
+      cur_idx = cur_idx % ArrayImg.length;
+    }
+    scroll_Img(scroll_box.querySelector('.next'), cur);
   }
 });
 
-CreatScroll_Img(cur_id);
+CreatScroll_Img(cur_idx);
 

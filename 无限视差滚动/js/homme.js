@@ -1,7 +1,7 @@
 // 加载轮播图的图片
 const li = document.querySelectorAll('.box ul li');
 for (let i = 0; i < li.length; i++) {
-  li[i].style.background = `url(./images/GirlFriend0${i + 1}.jpg) no-repeat center/cover`;
+  li[i].style.background = `url(./images/girl0${i + 1}.jpg) no-repeat center/cover`;
 }
 
 const ul = document.querySelector('.box ul');
