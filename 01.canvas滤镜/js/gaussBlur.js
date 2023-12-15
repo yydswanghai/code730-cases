@@ -1,7 +1,7 @@
 /**
  * 高斯模糊
  */
-export function gaussBlur(imgData: ImageData): ImageData {
+function gaussBlur(imgData) {
     var pixes = imgData.data;
     var width = imgData.width;
     var height = imgData.height;

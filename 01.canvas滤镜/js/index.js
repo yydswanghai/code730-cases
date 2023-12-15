@@ -1,7 +1,3 @@
-
-import { gaussBlur } from "./gaussBlur"
-import { setBlackAndWhite } from "./setBlackAndWhite";
-
 /**
  * 画布中的1个图像是由多个像素点组成，每个像素点拥有4个数据：红、绿、蓝、alpha
  * 把一个图像变成黑白，只需要将图像的每个像素点设置成为红绿蓝的平均数即可
@@ -21,7 +17,7 @@ function init() {
         return;
     }
 
-    const ctx = cvs.getContext("2d") as CanvasRenderingContext2D;
+    const ctx = cvs.getContext("2d");
 
     blurBtn?.addEventListener('click', function () {
         ctx.drawImage(img, 0, 0);
@@ -42,3 +38,19 @@ function init() {
 }
 
 init();
+
+/**
+ * 设置成黑白照
+ */
+function setBlackAndWhite(imgData) {
+    for (let i = 0; i < imgData.data.length; i += 4) {// 每4个为一个数据
+        //循环一个像素点
+        const r = imgData.data[i];
+        const g = imgData.data[i + 1];
+        const b = imgData.data[i + 2];
+        const avg = (r + g + b) / 3;
+
+        imgData.data[i] = imgData.data[i + 1] = imgData.data[i + 2] = avg;
+    }
+    return imgData
+}
