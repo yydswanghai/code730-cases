@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    /* Visit https://aka.ms/tsconfig to read more about this file */
+    "target": "es2016",/* 配置编译目标代码的版本标准 */
+    "lib": [/* 默认情况下ts使用的环境 */
+        "esnext",
+        "dom",
+        "dom.iterable"
+    ],
+    "module": "commonjs",/* 模块化标准 */
+    "esModuleInterop": true,/* 启用es模块化交互非es模块导出 */
+    "forceConsistentCasingInFileNames": true,/* 用于强制确保在导入中使用一致的大小写。当这个选项设置为 true 时，TypeScript 会检查导入的文件名是否与实际文件名的大小写匹配. */
+    "strict": true,/* 启用所有严格的类型检查选项 */
+    "skipLibCheck": true,/* 用来跳过对所有 .d.ts 文件的类型检查的 */
+    "removeComments": true,/* 编译删除注释 */
+    "outDir": "./dist"/* 编译输出目录 */
+  },
+  "include": [ // 指定ts编译的文件目录，默认是全部都编译
+    "./src", // 仅编译 src下的ts文件
+  ]
+}
