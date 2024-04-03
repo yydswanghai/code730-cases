@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+      "target": "ESNext",
+      "module": "commonjs",
+      "lib": [
+          "ESNext",
+          "DOM",
+          "DOM.Iterable"
+      ],
+      "outDir": "./dist",
+      "removeComments": true,
+      "esModuleInterop": true,
+      "strictNullChecks": true,
+      "strictPropertyInitialization": true,
+      "sourceMap": true
+  },
+  "include": [ // 指定ts编译的文件目录，默认是全部都编译
+      "src/**/*.ts",
+      "src/*.ts"
+  ]
+}
