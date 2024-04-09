@@ -16,23 +16,23 @@ function main() {
 }
 
 function run(func) {
-  let _catch = {
+  let cache = {
     status: 'padding',
     value: null
   };
   const oldFetch = window.fetch;
   window.fetch = function (...args) {
-    if (_catch.status === 'fulfilled') {
-      return _catch.value;
-    } else if (_catch.status === 'rejected') {
-      throw _catch.value;
+    if (cache.status === 'fulfilled') {
+      return cache.value;
+    } else if (cache.status === 'rejected') {
+      throw cache.value;
     }
     const proms = oldFetch(...args).then((r) => r.json()).then((res) => {
-      _catch.status = 'fulfilled';
-      _catch.value = res;
+      cache.status = 'fulfilled';
+      cache.value = res;
     }, (err) => {
-      _catch.status = 'rejected';
-      _catch.value = err;
+      cache.status = 'rejected';
+      cache.value = err;
     });
     throw proms;
   }
