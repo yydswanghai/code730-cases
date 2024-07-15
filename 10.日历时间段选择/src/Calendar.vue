@@ -29,18 +29,21 @@
       </div>
     </div>
     <div class="week">
-      <div v-for="(it, idx) in displayWeeks" :key="idx">
+      <div v-for="(it, idx) in displayWeeks" :key="idx" class="d-cell">
         <span>{{ it }}</span>
       </div>
     </div>
     <div class="date">
-      <div
-        v-for="(it, idx) in displayDays"
-        :key="idx"
-        :class="[...it.classes]"
-        @click="handleSelectDate(it.origin)"
-      >
-        <span>{{ it.date }}</span>
+      <div class="date-inner">
+        <div
+          class="d-cell"
+          v-for="(it, idx) in displayDays"
+          :key="idx"
+          :class="[...it.classes]"
+          @click="handleSelectDate(it.origin)"
+        >
+          <span>{{ it.date }}</span>
+        </div>
       </div>
     </div>
   </div>
@@ -282,6 +285,7 @@ $between-bg: #f2f6fc;
   color: $text-color1;
   background-color: $white;
   height: calc(100% - 100px);
+  z-index: 11;
   .pop-flex {
     display: flex;
     flex-wrap: wrap;
@@ -298,20 +302,37 @@ $between-bg: #f2f6fc;
 }
 .week,
 .date {
-  display: grid;
-  grid-template-columns: repeat(7, minmax(0, 1fr));
-  grid-auto-rows: minmax(100px, auto);
-  font-size: 32px;
-  cursor: default;
-  & > div {
+  .d-cell {
     color: $text-color1;
     display: flex;
     align-items: center;
     justify-content: center;
   }
 }
+.week {
+  cursor: default;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  grid-template-rows: 100%;
+  padding-bottom: 10px;
+}
 .date {
-  cursor: pointer;
+  position: relative;
+  width: 100%;
+  padding-top: 100%;
+  z-index: 10;
+  .date-inner {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    grid-template-rows: repeat(7, 1fr);
+    font-size: 32px;
+    cursor: pointer;
+  }
   .current-month {
     color: $text-color2;
     &:not(.select-only, .select-prev, .select-next):hover {
