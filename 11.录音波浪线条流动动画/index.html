@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv=X-UA-Compatible content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"/>
+        <meta charset="utf-8"/>
+        <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+        <title>波浪线条流动动画</title>
+    </head>
+    <body>
+      <style>
+        body {
+          padding: 0;
+          margin: 0;
+        }
+        .btns {
+          display: flex;
+          position: fixed;
+          top: 0;
+          left: 0;
+        }
+      </style>
+      <canvas id="waves"></canvas>
+      <div class="btns">
+        <button id="btn1">开始</button>
+        <button id="btn2">停止</button>
+      </div>
+      <script src="./audio.js"></script>
+      <script src="./SineWave.js"></script>
+      <script>
+        const audio = setupAudioMonitor();
+        document.querySelector('#btn1').addEventListener('click', () => {
+            audio.start((maxAmplitude) => {
+              console.log(maxAmplitude)
+              const lineWidths = [3, 2, 1, 0.5];
+              const wavelength = [200, 100, 50, 100];
+              const newSine = s.waves.map((wave, idx) => {
+                let amplitude;
+                let con = 300;
+                if (idx === 0 || idx === 1) {
+                  amplitude = maxAmplitude * con;
+                } else if (idx === 2) {
+                  amplitude = -maxAmplitude * con;
+                } else if (idx === 3) {
+                  amplitude = -maxAmplitude * con + 50;
+                }
+                return {
+                  ...wave,
+                  lineWidth: lineWidths[idx],
+                  amplitude: amplitude,
+                  wavelength: wavelength[idx],
+                }
+              });
+              s.waves = newSine;
+            });
+        });
+        document.querySelector('#btn2').addEventListener('click', () => {
+            audio.stop(() => {
+              s.waves = silentWaves;
+            });
+        });
+        var silentWave = {
+            timeModifier: 1,
+            lineWidth: 3,
+            amplitude: 1,
+            wavelength: 200,
+            segmentLength: 20,
+        };
+        var silentWaves = [silentWave, silentWave, silentWave, silentWave];
+        var s = new SineWave({
+          el: document.getElementById("waves"),
+          speed: 8,
+          resizeEvent() {
+            const style = this.ctx.createLinearGradient(0, 0, this.width, 0);
+            style.addColorStop(0, 'rgba(22, 183, 35, 1)');
+            style.addColorStop(0.3, 'rgba(222, 227, 16, 0.7)');
+            style.addColorStop(0.5, 'rgba(14, 159, 225, 0.8)');
+            style.addColorStop(0.8, 'rgba(227, 41, 16, 0.7)');
+            style.addColorStop(1, 'rgba(222, 88, 233, 1)');
+            let i = -1;
+            const len = this.waves.length;
+            while (++i < len) {
+              this.waves[i].strokeStyle = style;
+            }
+          },
+          waves: silentWaves
+        });
+      </script>
+    </body>
+</html>
