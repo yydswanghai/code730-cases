@@ -1,7 +1,8 @@
 <template>
   <div class="calendar">
-    <div class="month">
-      <div class="month-tab">
+    <!-- 月 -->
+    <div class="calendar_m">
+      <div class="m-tab">
         <div class="left m-item">
           <div v-if="showYear" @click="handleChangeYear('subtract')">&lt;&lt;</div>
           <div v-if="!showYear && !showMonth" @click="handleChangeMonth('subtract')">&lt;</div>
@@ -16,7 +17,7 @@
         </div>
       </div>
     </div>
-    <div class="month-pop">
+    <div class="calendar_pop">
       <div v-if="showMonth" class="pop-flex">
         <span v-for="(it, idx) in displayMonths" :key="idx" @click="handleSelectMonth(idx)">
           {{ it }}
@@ -28,13 +29,15 @@
         </span>
       </div>
     </div>
-    <div class="week">
+    <!-- 周 -->
+    <div class="calendar_w">
       <div v-for="(it, idx) in displayWeeks" :key="idx" class="d-cell">
         <span>{{ it }}</span>
       </div>
     </div>
-    <div class="date">
-      <div class="date-inner">
+    <!-- 天 -->
+    <div class="calendar_d">
+      <div class="d-inner">
         <div
           class="d-cell"
           v-for="(it, idx) in displayDays"
@@ -76,57 +79,75 @@ dayjs.locale('zh-cn');
 dayjs.extend(isBetween);
 defineOptions({ name: 'Calendar' });
 
-const currentDate = Object.freeze(dayjs()); // 当前日期
+// 字符串转换为 dayjs 对象
+const localDays = computed(() => props.modelValue.map((it) => dayjs(it)));
+/**
+ * 当前日期显示
+ * [日期1] 以"日期1"作为当前日期
+ * [日期1, 日期2]: curIsFirst标记为ture 以"日期1"作为当前日期，false 则以"日期2"作为当前日期
+ */
+const curIsFirst = ref(true);// true 第一个 false 第二个
+
+const currentDay = computed(() => {
+  const _days = localDays.value;
+  if (_days.length > 1) {
+    return curIsFirst.value ? _days[0] : _days[_days.length - 1];
+  } else if (_days.length > 0) {
+    return _days[0];
+  } else {
+    return dayjs();
+  }
+});
+
 const state = reactive({
-  year: currentDate.year(),
-  month: currentDate.month()
+  year: currentDay.value.year(),
+  month: currentDay.value.month()
 });
 const { year, month } = toRefs(state);
 
-let localSelect: Dayjs[] = []; // 选中的日期
-if (props.modelValue.length) {
-  localSelect = props.modelValue.map((it) => dayjs(it));
-}
 /* 比较两个日期的年月日是否相同 */
 function isSame(d1: Dayjs, d2: Dayjs) {
   return dayjs(d1.format('YYYY-MM-DD')).isSame(d2.format('YYYY-MM-DD'));
 }
-function formatDayItem(day: Dayjs, _current_month: boolean, _select: Dayjs[]) {
-  const _current_date = currentDate;
+function formatDayItem(_day: Dayjs, _is_current_month: boolean, _select: Dayjs[]) {
+  const _current_day = currentDay.value;
   const classes = [];
   let class1 = '';
   if (_select.length === 1) {
     const [first] = _select;
-    if (isSame(first, day)) class1 = 'select-only';
+    if (isSame(first, _day)) class1 = 'select-only';
   } else if (_select.length === 2) {
     const [first, second] = _select;
-    if (isSame(first, day)) {
+    if (isSame(first, _day)) {
       class1 = 'select-prev';
-    } else if (isSame(second, day)) {
+    } else if (isSame(second, _day)) {
       class1 = 'select-next';
-    } else if (day.isBetween(first, second)) {
+    } else if (_day.isBetween(first, second)) {
       class1 = 'select-between';
     }
   }
   classes.push(class1);
-  if (isSame(day, _current_date)) classes.push('current-date');
-  classes.push(_current_month ? 'current-month' : 'not-current-month');
+  if (isSame(_day, _current_day)) classes.push('current-date');
+  classes.push(_is_current_month ? 'current-month' : 'not-current-month');
   return {
-    year: day.year(),
-    month: day.month(),
-    date: day.date(),
-    origin: day,
-    isCurrentMonth: _current_month,
-    isCurrentDate: isSame(day, _current_date),
+    year: _day.year(),
+    month: _day.month(),
+    date: _day.date(),
+    origin: _day,
+    isCurrentMonth: _is_current_month,
+    isCurrentDate: isSame(_day, _current_day),
     classes
   };
 }
-// 更新要显示的天数
-function updateDisplayDays(_month: number, _year?: number, _select: Dayjs[] = []) {
-  const _current_date = currentDate;
-  const y = _year || _current_date.year();
+/**
+ * 更新要显示的天数
+ * @param _month 显示的月份
+ * @param _year  显示的年份
+ * @param _select 显示用户选中的日期
+ */
+function updateDisplayDays(_year: number, _month: number, _select: Dayjs[] = []) {
   // 月的第一天
-  const firstDayOfMonth = _current_date.year(y).month(_month).date(1);
+  const firstDayOfMonth = dayjs().year(_year).month(_month).date(1);
   // 日 一 二 三 四 五 六
   //    1
   const prevDays = firstDayOfMonth.day();
@@ -134,19 +155,19 @@ function updateDisplayDays(_month: number, _year?: number, _select: Dayjs[] = []
   const nextDays = 42 - daysInMonth - prevDays;
   const prev = [];
   for (let i = prevDays; i > 0; i--) {
-    const item = firstDayOfMonth.subtract(i, 'days');
-    prev.push(formatDayItem(item, false, _select));
+    const day = firstDayOfMonth.subtract(i, 'days');
+    prev.push(formatDayItem(day, false, _select));
   }
   const cur = [];
   for (let i = 0; i < daysInMonth; i++) {
-    const item = firstDayOfMonth.add(i, 'days');
-    cur.push(formatDayItem(item, true, _select));
+    const day = firstDayOfMonth.add(i, 'days');
+    cur.push(formatDayItem(day, true, _select));
   }
   const lastDayOfMonth = firstDayOfMonth.date(daysInMonth);
   const next = [];
   for (let i = 1; i <= nextDays; i++) {
-    const item = lastDayOfMonth.add(i, 'days');
-    next.push(formatDayItem(item, false, _select));
+    const day = lastDayOfMonth.add(i, 'days');
+    next.push(formatDayItem(day, false, _select));
   }
   return [...prev, ...cur, ...next];
 }
@@ -159,14 +180,19 @@ function updateDisplayYear(_year: number) {
   }
   return result;
 }
-const displayDays = ref(updateDisplayDays(month.value, year.value, localSelect));
-watch(
-  state,
-  (newState) => {
-    displayDays.value = updateDisplayDays(newState.month, newState.year, localSelect);
-  },
-  { deep: true }
-);
+const displayDays = ref(updateDisplayDays(currentDay.value.year(), currentDay.value.month(), localDays.value));
+watch(() => localDays.value, (newDays) => {
+  if (newDays.length) {
+    const _year = currentDay.value.year();
+    const _month = currentDay.value.month();
+    year.value = _year; // 同步更新面板显示的年、月
+    month.value = _month;
+    displayDays.value = updateDisplayDays(_year, _month, newDays);
+  } else {
+    console.error(`localDays 等于 ${JSON.stringify(newDays)}`)
+  }
+});
+
 const cloneYear = ref(year.value); // 用于锚定year
 const displayYears = computed(() => updateDisplayYear(cloneYear.value));
 const displayMonths = [
@@ -199,29 +225,34 @@ function handleChangeState(newState: 'y' | 'm') {
 function handleSelectMonth(newMonth: number) {
   month.value = newMonth;
   prevCode.value = null;
+  displayDays.value = updateDisplayDays(year.value, month.value, localDays.value);
 }
 function handleSelectYear(newYear: number) {
   year.value = newYear;
   cloneYear.value = newYear;
   prevCode.value = null;
+  displayDays.value = updateDisplayDays(year.value, month.value, localDays.value);
 }
 function handleSelectDate(origin: Dayjs) {
   const day = toRaw(origin);
-  const select = localSelect;
+  let select = toRaw(localDays.value);
   if (select.length === 0) {
-    localSelect.push(day);
+    select.push(day);
   } else if (select.length === 1 && !isSame(select[0], day)) {
     // 0是否在it之后
     if (select[0].isAfter(day)) {
-      localSelect.unshift(day);
+      // 当前选中的值在前
+      select.unshift(day);
+      curIsFirst.value = true;
     } else {
-      localSelect.push(day);
+      // 当前选中的值在后
+      select.push(day);
+      curIsFirst.value = false;
     }
   } else {
-    localSelect = [day];
+    select = [day];
   }
-  displayDays.value = updateDisplayDays(month.value, year.value, localSelect);
-  const result = localSelect.map((it: Dayjs) =>
+  const result = select.map((it: Dayjs) =>
     props.format ? it.format(props.format) : it.toDate()
   );
   emit('update:model-value', [...result]);
@@ -232,6 +263,7 @@ function handleChangeMonth(desc: 'add' | 'subtract') {
   const newDay = desc === 'add' ? old.add(1, 'month') : old.subtract(1, 'month');
   year.value = newDay.year();
   month.value = newDay.month();
+  displayDays.value = updateDisplayDays(year.value, month.value, localDays.value);
 }
 function handleChangeYear(desc: 'add' | 'subtract') {
   const old = dayjs().year(cloneYear.value);
@@ -250,15 +282,14 @@ $between-bg: #f2f6fc;
   background-color: $white;
   position: relative;
 }
-.month {
-  height: 100px;
-  line-height: 100px;
-  .month-tab {
+.calendar_m {
+  .m-tab {
     display: flex;
     align-items: center;
     justify-content: space-around;
     color: $text-color2;
-    font-size: 36px;
+    font-size: 24px;
+    padding: 10px 0;
   }
   .m-item > div {
     cursor: pointer;
@@ -268,7 +299,6 @@ $between-bg: #f2f6fc;
   }
   .left,
   .right {
-    width: 90px;
     text-align: center;
   }
   .center {
@@ -279,7 +309,7 @@ $between-bg: #f2f6fc;
     }
   }
 }
-.month-pop {
+.calendar_pop {
   position: absolute;
   top: 100px;
   color: $text-color1;
@@ -291,7 +321,7 @@ $between-bg: #f2f6fc;
     flex-wrap: wrap;
     & > span {
       flex: 1 1 50%;
-      font-size: 42px;
+      font-size: 24px;
       text-align: center;
       &:hover {
         color: $primary;
@@ -300,8 +330,8 @@ $between-bg: #f2f6fc;
     }
   }
 }
-.week,
-.date {
+.calendar_w,
+.calendar_d {
   .d-cell {
     color: $text-color1;
     display: flex;
@@ -309,19 +339,19 @@ $between-bg: #f2f6fc;
     justify-content: center;
   }
 }
-.week {
+.calendar_w {
   cursor: default;
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   grid-template-rows: 100%;
   padding-bottom: 10px;
 }
-.date {
+.calendar_d {
   position: relative;
   width: 100%;
   padding-top: 100%;
   z-index: 10;
-  .date-inner {
+  .d-inner {
     position: absolute;
     top: 0;
     left: 0;
@@ -330,7 +360,7 @@ $between-bg: #f2f6fc;
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     grid-template-rows: repeat(7, 1fr);
-    font-size: 32px;
+    font-size: 24px;
     cursor: pointer;
   }
   .current-month {
