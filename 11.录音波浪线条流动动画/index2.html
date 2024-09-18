@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv=X-UA-Compatible content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"/>
+        <meta charset="utf-8"/>
+        <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+        <title>矩形音波图动画特效</title>
+    </head>
+    <body>
+      <style>
+        body {
+          padding: 0;
+          margin: 0;
+        }
+        .btns {
+          display: flex;
+          position: fixed;
+          top: 0;
+          left: 0;
+        }
+      </style>
+      <canvas id="waves" width="600" height="200"></canvas>
+      <div class="btns">
+        <button id="btn1">1</button>
+        <button id="btn2">2</button>
+      </div>
+      <script src="./audio2.js"></script>
+      <script src="./SineWave.js"></script>
+      <script>
+        let drawStart = 0;        // 绘制起始位置  
+        const scrollSpeed = 1;    // 滚动速度（像素/帧） 
+        const cvs = document.querySelector('#waves');
+        const ctx = cvs.getContext('2d');
+        const{ width, height } = cvs;
+        function drawWaveForm(dataArray) {
+          // 清除画布 
+          ctx.clearRect(0, 0, width, height);
+          const len = dataArray.length / 4; // 128/4 = 32份
+          const barWidth = width / len; // 每一份的长度
+          ctx.fillStyle='#78c5F7';
+          let idxs = [];
+          for(let i = 0; i < len; i++){
+            const idx = Math.floor((i + drawStart) % dataArray.length);
+            const data = dataArray[idx];
+            const barHeight = data / 255 * height;
+            const x = i * barWidth;
+            const y = height - barHeight;
+            idxs.push(barHeight)
+            ctx.fillRect(x, y, barWidth - 2, barHeight);
+          }
+          console.log(idxs, dataArray)
+          // 更新绘制起始位置以实现滚动效果  
+          drawStart = (drawStart + scrollSpeed) % dataArray.length;// 0~31
+        }
+
+        const audio = setupAudioMonitor();
+        document.querySelector('#btn1').addEventListener('click', () => {
+            audio.start((dataArray) => {
+              drawWaveForm(dataArray)
+            });
+        });
+        document.querySelector('#btn2').addEventListener('click', () => {
+            audio.stop(() => {
+              console.log('stop')
+            });
+        });
+      </script>
+    </body>
+</html>
