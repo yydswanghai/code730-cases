@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    .box {
+      width: 60px;
+      height: 60px;
+      background-color: skyblue;
+      color: white;
+      font-size: 30px;
+      margin: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container" style="display: flex">
+    <div class="box" key="1">1</div>
+    <div class="box" key="2">2</div>
+    <div class="box" key="3">3</div>
+    <div class="box" key="4">4</div>
+    <div class="box" key="5">5</div>
+  </div>
+  <button onclick="shuffle()">click</button>
+
+  <script>
+    function shuffle() {
+      const container = document.querySelector('.container')
+      const boxes = Array.from(container.children)
+
+      // first 起始位置
+      const startPositions = boxes.reduce((pre, box) => {
+        return {
+          ...pre,
+          [box.getAttribute('key')]: box.getBoundingClientRect()
+        }
+      }, {})
+
+      // 随机打乱盒子顺序，然后把打乱好的盒子放回 DOM
+      boxes.sort(() => Math.random() - 0.5)
+      boxes.forEach(box => container.appendChild(box))
+
+      // last 结束位置
+      const endPositions = boxes.reduce((pre, box) => {
+        return {
+          ...pre,
+          [box.getAttribute('key')]: box.getBoundingClientRect()
+        }
+      }, {})
+
+      // invert
+      boxes.forEach(box => {
+        const key = box.getAttribute('key')
+        const start = startPositions[key]
+        const end = endPositions[key]
+
+        const deltaX = start.left - end.left
+        const deltaY = start.top - end.top
+
+        // 第一个参数，是我们定义的两个 “关键帧”；第一帧元素被偏移到原始位置，
+        // 第二帧元素处在原位，此时浏览器就会为这个元素应用过渡动画，实现 “归位” 的效果。
+
+        // 第二个参数是配置项，duration 和 easing 其实就是 CSS 的 transition 第二个和第三个属性，表示持续时间和缓动；
+        // 而这个 fill 属性比较重要，它表示动画播放完成后，样式是否继续留存，我们设为 'none' 便可以消除留存的样式，做到无任何残留样式；
+        // composite 属性也很重要，它表示如果同时生效了多个动画，应如何叠加，把它的值设为 'accumulate'（计算）或 'add'（叠加）都可以，但不能留空，留空的情况下，在前一个动画没播放完的情况下再点击按钮，动画会乱掉。
+        // 使用这个 API 播放动画， 甚至也不需要屏蔽掉元素自带的 transition，这不会对我们产生任何影响。
+        // play
+        box.animate([
+          { transform: `translate(${deltaX}px, ${deltaY}px)` },
+          { transform: `translate(0, 0)` }
+        ], {
+          duration: 1000, easing: 'ease', fill: 'none', composite: 'accumulate'
+        })
+      })
+    }
+  </script>
+</body>
+</html>

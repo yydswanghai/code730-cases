@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <style>
+    #div {
+      width: 100px;
+      height: 100px;
+      background-color: skyblue;
+    }
+  </style>
+  <div id="div"></div>
+  <button onclick="move()">移动</button>
+  <button onclick="back()">回来</button>
+  <script>
+    const el = document.querySelector('#div')
+    // 0 -> 100
+    function move() {
+      // 通过其他方式使它移动到正确位置
+      el.style.marginLeft = '100px'
+      // 设置 “反向” 的偏移
+      el.style.transform = 'translateX(-100px)'
+      el.style.transition = '';
+      requestAnimationFrame(() => {
+        console.log('move')
+        // 再给元素加上过渡
+        el.style.transition = 'transform 1s'
+        // 然后移除掉偏移，让元素 “归位”
+        el.style.transform = ''
+      })
+    }
+    // 0 <- 100
+    function back() {
+      el.style.marginLeft = '0px'
+      el.style.transform = 'translateX(100px)'
+      el.style.transition = '';
+      requestAnimationFrame(() => {
+        console.log('back')
+        // 再给元素加上过渡
+        el.style.transition = 'transform 1s'
+        // 然后移除掉偏移，让元素 “归位”
+        el.style.transform = ''
+      });
+    }
+    // 测试
+    // function rafCallback() {
+    //   console.log('raf')
+    //   requestAnimationFrame(rafCallback)
+    // }
+    // rafCallback()
+
+    // let second = 0;
+    // setInterval(() => {
+    //   second += 1
+    //   console.log(second + '秒')
+    // }, 1000);
+  </script>
+</body>
+</html>

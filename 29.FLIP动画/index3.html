@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    .box {
+      width: 60px;
+      height: 60px;
+      background-color: skyblue;
+      color: white;
+      font-size: 30px;
+      margin: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container" style="display: flex">
+    <div class="box" key="1">1</div>
+    <div class="box" key="2">2</div>
+    <div class="box" key="3">3</div>
+    <div class="box" key="4">4</div>
+    <div class="box" key="5">5</div>
+  </div>
+  <button onclick="shuffle()">click</button>
+
+  <script>
+    function shuffle() {
+      const container = document.querySelector('.container')
+      const boxes = Array.from(container.children)
+
+      // first 起始位置
+      const startPositions = boxes.reduce((pre, box) => {
+        return {
+          ...pre,
+          [box.getAttribute('key')]: box.getBoundingClientRect()
+        }
+      }, {})
+
+      // 随机打乱盒子顺序，然后把打乱好的盒子放回 DOM
+      boxes.sort(() => Math.random() - 0.5)
+      boxes.forEach(box => container.appendChild(box))
+
+      // last 结束位置
+      const endPositions = boxes.reduce((pre, box) => {
+        return {
+          ...pre,
+          [box.getAttribute('key')]: box.getBoundingClientRect()
+        }
+      }, {})
+
+      // invert
+      boxes.forEach(box => {
+        const key = box.getAttribute('key')
+        const start = startPositions[key]
+        const end = endPositions[key]
+
+        const deltaX = start.left - end.left
+        const deltaY = start.top - end.top
+
+        // 如果元素 原地不动
+        if (deltaX === 0 && deltaY === 0) {
+          return
+        }
+        // 让元素回到起点
+        box.style.transition = null
+        box.style.transform = `translate(${deltaX}px, ${deltaY}px)`
+        // play
+        requestAnimationFrame(() => {
+          box.style.transition = `transform 1s`
+          box.style.transform = ''
+        })
+        box.addEventListener('transitionend', () => {
+          box.style.transition = null
+          box.style.transform = null
+        }, { once: true })
+      })
+    }
+  </script>
+</body>
+</html>

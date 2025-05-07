@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+      #container {
+        display: flex;
+        flex-wrap: wrap;
+      }
+      #container > div {
+        height: 100px;
+        box-sizing: border-box;
+        margin: 4px;
+      }
+  </style>
+</head>
+<body>
+  <div id="container">
+    <div id="div" style="width: 100px; background-color: skyblue; opacity: 0.8;"></div>
+  </div>
+  <button onclick="clickButton()" style="margin-top: 10px">随机插入元素</button>
+  <script>
+    function clickButton() {
+      const div = document.querySelector('#div')
+      const start = div.getBoundingClientRect() // 开始位置
+
+      changeDOM()
+
+      const end = div.getBoundingClientRect() // 结束为止
+      div.style.transition = ''
+      div.style.transform = `translate(${start.left - end.left}px, ${start.top - end.top}px)`
+      // play
+      requestAnimationFrame(() => {
+        div.style.transition = 'transform 1s'
+        div.style.transform = ''
+      })
+    }
+
+    function changeDOM() {
+      // 生成一个 div
+      const newDiv = document.createElement('div')
+      // 宽度在 50~200px 之间随机
+      newDiv.style.width = `${Math.floor(Math.random() * (200 - 50 + 1)) + 50}px`
+      newDiv.style.border = '2px dashed grey'
+      // 放入容器中
+      document.getElementById('container').prepend(newDiv)
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FLIP 动画</title>
+    <style>
+      .box {
+        width: 60px;
+        height: 60px;
+        background-color: skyblue;
+        color: white;
+        font-size: 30px;
+        margin: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container" style="display: flex">
+      <div class="box" key="1">1</div>
+      <div class="box" key="2">2</div>
+      <div class="box" key="3">3</div>
+      <div class="box" key="4">4</div>
+      <div class="box" key="5">5</div>
+    </div>
+    <button onclick="shuffle()">打乱</button>
+
+    <script src="./util.js"></script>
+    <script>
+      function shuffle() {
+        const container = document.querySelector('.container')
+        const boxes = Array.from(container.children)
+
+        // 随机打乱盒子顺序，然后把打乱好的盒子放回 DOM
+        boxes.sort(() => Math.random() - 0.5)
+        boxes.forEach(box => container.appendChild(box))
+      }
+
+      flip(document.querySelector('.container'))
+    </script>
+  </body>
+</html>
