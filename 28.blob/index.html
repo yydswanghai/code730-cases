@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    #drop-zone {
+      width: 500px;
+      height: 500px;
+      background-color: #d8e7f5;
+    }
+    label {
+      display: block;
+      margin-bottom: 10px;
+    }
+    #preview {
+      height: 300px;
+    }
+  </style>
+</head>
+<body>
+  <label for="fileInput">
+    readAsText:
+    <input type="file" id="fileInput" />
+  </label>
+  <label for="fileInput2">
+    readAsDataURL:
+    <input type="file" id="fileInput2" />
+  </label>
+  <div id="drop-zone">
+    拖拽到此处
+  </div>
+  <div>
+    <div>上传图片显示区域：</div>
+    <img id="preview" />
+  </div>
+  <script>
+    const preview = document.querySelector('#preview')
+    const fileInput = document.querySelector('#fileInput')
+    const reader = new FileReader()
+    fileInput.onchange = (e) => {
+      const file = e.target.files[0]
+      console.log(file.__proto__.constructor.name)
+      reader.readAsText(file)
+    }
+
+    const fileInput2 = document.querySelector('#fileInput2')
+    let showimg = false
+    fileInput2.onchange = (e) => {
+      const file = e.target.files[0]
+      console.log(file.__proto__.constructor.name)
+      reader.readAsDataURL(file)
+      showimg = true
+    }
+
+    reader.onload = (e) => {
+      console.log(e.target.result)
+      if (showimg) {
+        preview.src = e.target.result;
+      }
+    }
+    reader.onprogress = (e) => {
+      // loaded 已读取量
+      // total 需读取总量
+      if (e.loaded && e.total) {
+        const percent = (e.loaded / e.total) * 100;
+        console.log(`上传进度：${Math.round(percent)}%`)
+      }
+    }
+
+    const dropZone = document.querySelector('#drop-zone')
+    dropZone.ondragover = (e) => {
+      e.preventDefault();
+    }
+    dropZone.ondrop = (e) => {
+      e.preventDefault();
+      const files = e.dataTransfer.files;
+      console.log(files)
+    }
+
+    // 当我们使用createObjectURL()方法创建一个data URL 时，
+    // 就需要使用revokeObjectURL()方法从内存中清除它来释放内存。
+    // 虽然浏览器会在文档卸载时自动释放 Data URL，但为了提高性能，
+    // 我们应该使用createObjectURL()来手动释放它。
+    // revokeObjectURL()方法接受一个Data URL 作为其参数，返回undefined。
+    const objUrl = URL.createObjectURL(new File(['./img1.jpg'], 'filename_img1'))
+    console.log(objUrl)
+    URL.revokeObjectURL(objUrl)
+  </script>
+</body>
+</html>
